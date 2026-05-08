@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Máquinas Eléctricas — Mario Miranda Araos</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{--bg:#f8fafc;--bg2:#f1f5f9;--bg3:#e8f0fe;--surface:#ffffff;--surface2:#f0f4ff;--border:rgba(59,130,246,.18);--border2:rgba(59,130,246,.3);--accent:#2563eb;--accent2:#3b82f6;--accent3:#1d4ed8;--gold:#d97706;--gold2:#f59e0b;--teal:#0d9488;--teal2:#14b8a6;--coral:#ea580c;--purple:#7c3aed;--green:#16a34a;--text:#0f172a;--text2:#374151;--text3:#6b7280;--fd:'Syne',sans-serif;--fb:'DM Sans',sans-serif;--fm:'DM Mono',monospace;--r:12px;--rl:20px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--bg);color:var(--text);line-height:1.7;font-size:15px}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(248,250,252,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{font-family:var(--fd);font-weight:700;font-size:14px;color:var(--text)}
+.nav-brand span{color:var(--accent2)}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap}
+.nav-links a{font-size:11px;color:var(--text2);text-decoration:none;padding:4px 10px;border-radius:6px;transition:all .2s;font-family:var(--fd);font-weight:500}
+.nav-links a:hover{color:var(--text);background:var(--surface)}
+@media(max-width:640px){.nav-links{display:none}}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 1.5rem 4rem;position:relative;overflow:hidden}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(59,130,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.04) 1px,transparent 1px);background-size:50px 50px}
+.hero-glow{position:absolute;width:700px;height:700px;background:radial-gradient(circle,rgba(59,130,246,.07) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.hero-content{position:relative;z-index:1;max-width:940px;width:100%;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);border-radius:100px;padding:6px 18px;font-size:11px;color:var(--accent3);font-family:var(--fm);margin-bottom:2rem;letter-spacing:.08em;text-transform:uppercase}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent2);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+.hero-title{font-family:var(--fd);font-weight:800;font-size:clamp(2.8rem,7vw,5.2rem);line-height:1.05;letter-spacing:-.02em;margin-bottom:1.5rem}
+.hero-title .l1{color:var(--text);display:block}
+.hero-title .l2{color:var(--accent2);display:block}
+.hero-title .l3{color:var(--text2);display:block;font-size:.5em;font-weight:500;letter-spacing:.06em;margin-top:.6rem}
+.hero-intro{font-size:1rem;color:var(--text2);max-width:700px;margin:0 auto 2.5rem;line-height:1.85}
+.hero-intro strong{color:var(--text)}
+.hero-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:2.5rem}
+.hero-tag{display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:8px 14px;font-size:12px;color:var(--text2);font-family:var(--fd);font-weight:500}
+.hero-tag .dot{width:5px;height:5px;border-radius:50%}
+.hero-sections{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;max-width:800px;margin:0 auto}
+.hsc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 10px;text-align:center;text-decoration:none;transition:all .2s;cursor:pointer}
+.hsc:hover{background:var(--surface2);border-color:var(--border2);transform:translateY(-2px)}
+.hsc .n{font-family:var(--fm);font-size:10px;color:var(--text3);margin-bottom:4px}
+.hsc .t{font-family:var(--fd);font-weight:600;font-size:12px;color:var(--text)}
+.hero-scroll{margin-top:2.5rem;color:var(--text3);font-size:11px;font-family:var(--fm);letter-spacing:.1em}
+.hero-scroll::after{content:'↓';display:block;margin-top:6px;font-size:18px;animation:bounce .9s infinite;color:var(--accent2)}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+/* SECTIONS */
+.ps{padding:70px 1.5rem;max-width:1080px;margin:0 auto}
+.sh{margin-bottom:2.5rem}
+.se{font-family:var(--fm);font-size:11px;color:var(--accent2);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.75rem;display:flex;align-items:center;gap:10px}
+.se::before{content:'';height:1px;width:28px;background:var(--accent2)}
+.st{font-family:var(--fd);font-weight:700;font-size:clamp(1.5rem,3.5vw,2.2rem);color:var(--text);line-height:1.2}
+.ss{color:var(--text2);font-size:.9rem;margin-top:.7rem;max-width:640px}
+hr.sd{border:none;border-top:1px solid var(--border);margin:0}
+
+/* ACCORDION */
+.as{border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:10px}
+.ah{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;cursor:pointer;user-select:none;background:var(--surface);transition:background .2s}
+.ah:hover{background:var(--surface2)}
+.at{display:flex;align-items:center;gap:12px;font-family:var(--fd);font-weight:600;font-size:14px;color:var(--text)}
+.ab-badge{font-size:10px;padding:3px 10px;border-radius:100px;font-weight:600;letter-spacing:.06em;font-family:var(--fm)}
+.ach{font-size:15px;color:var(--text3);transition:transform .3s}
+.ach.open{transform:rotate(180deg)}
+.ab{padding:0 20px;max-height:0;overflow:hidden;transition:max-height .4s ease,padding .25s}
+.ab.open{max-height:9000px;padding:16px 20px 22px}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.chip{padding:5px 13px;border-radius:100px;font-size:12px;font-weight:500;border:1px solid;cursor:pointer;transition:all .15s;font-family:var(--fd)}
+.chip:hover{opacity:.8;transform:translateY(-1px)}
+.c-blue{background:rgba(37,99,235,.08);color:#1d4ed8;border-color:rgba(37,99,235,.25)}
+.c-teal{background:rgba(13,148,136,.08);color:#0d9488;border-color:rgba(13,148,136,.25)}
+.c-amber{background:rgba(217,119,6,.08);color:#b45309;border-color:rgba(217,119,6,.25)}
+.c-purple{background:rgba(124,58,237,.08);color:#6d28d9;border-color:rgba(124,58,237,.25)}
+.c-coral{background:rgba(234,88,12,.08);color:#c2410c;border-color:rgba(234,88,12,.25)}
+.c-green{background:rgba(22,163,74,.08);color:#15803d;border-color:rgba(22,163,74,.25)}
+.c-red{background:rgba(220,38,38,.08);color:#b91c1c;border-color:rgba(220,38,38,.25)}
+.c-gray{background:rgba(107,114,128,.08);color:#4b5563;border-color:rgba(107,114,128,.2)}
+
+/* DETAIL */
+.db{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:14px 16px;margin-top:4px;display:none}
+.db.show{display:block}
+.dt{font-family:var(--fd);font-weight:600;font-size:13px;color:var(--text);margin-bottom:7px}
+.ir{display:flex;gap:8px;align-items:flex-start;margin-bottom:5px}
+.ir .d{width:5px;height:5px;border-radius:50%;background:var(--accent2);margin-top:6px;flex-shrink:0}
+.ir p{font-size:12px;color:var(--text2);margin:0;line-height:1.65}
+.dv{border:none;border-top:1px solid var(--border);margin:10px 0}
+.sl{font-family:var(--fm);font-size:10px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin:0 0 8px}
+
+/* FORMULA */
+.fb{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:var(--r);padding:11px 15px;margin:8px 0;text-align:center}
+.ff{font-family:var(--fm);font-size:14px;color:var(--accent3);font-weight:500}
+.fl{font-size:11px;color:var(--text3);margin-top:5px;line-height:1.7}
+
+/* TABLES */
+.tbl{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+.tbl th{text-align:left;font-family:var(--fd);font-weight:600;font-size:10px;color:var(--text3);padding:6px 10px;border-bottom:1px solid var(--border2);letter-spacing:.06em;text-transform:uppercase}
+.tbl td{padding:7px 10px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top;font-size:12px}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--surface);color:var(--text)}
+
+/* VAR CARDS */
+.vg{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:9px;margin:12px 0}
+.vc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:13px}
+.vs{font-family:var(--fm);font-size:22px;font-weight:500;margin-bottom:5px}
+.vn{font-family:var(--fd);font-weight:600;font-size:12px;color:var(--text);margin-bottom:2px}
+.vu{font-size:11px;color:var(--text3);margin-bottom:4px;font-family:var(--fm)}
+.vd{font-size:11px;color:var(--text2);line-height:1.5}
+
+/* CALC */
+.cr{display:flex;align-items:center;gap:10px;margin:7px 0;flex-wrap:wrap}
+.cr label{font-size:12px;color:var(--text2);min-width:110px;font-family:var(--fd)}
+.cr input[type=range]{flex:1;min-width:80px;accent-color:var(--accent2)}
+.cr select{padding:5px 9px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-size:12px;font-family:var(--fb);box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.vo{font-family:var(--fm);font-size:12px;font-weight:500;color:var(--accent3);min-width:68px;text-align:right}
+.rr{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.rc{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);padding:9px 13px;text-align:center;flex:1;min-width:85px}
+.rl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;font-family:var(--fm)}
+.rv{font-size:15px;font-weight:500;color:var(--accent3);font-family:var(--fm)}
+.ru{font-size:10px;color:var(--text3)}
+
+/* CANVAS */
+.cw{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin:10px 0}
+
+/* IE CARDS */
+.iec{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:7px;margin:10px 0}
+.ie{border-radius:var(--r);padding:11px 9px;text-align:center;border:1px solid}
+.il{font-size:10px;font-weight:600;margin-bottom:2px;font-family:var(--fm);letter-spacing:.06em}
+.iv{font-size:15px;font-weight:700;font-family:var(--fd)}
+.is{font-size:10px;margin-top:2px;opacity:.75}
+
+/* CX GRID */
+.cxg{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:9px;margin:10px 0}
+.cxc{border-radius:var(--r);border:1px solid;padding:13px;cursor:pointer;transition:all .2s}
+.cxc:hover{transform:translateY(-2px)}
+.cxs{font-family:var(--fm);font-size:20px;font-weight:700;margin-bottom:4px}
+.cxn{font-family:var(--fd);font-weight:600;font-size:12px;margin-bottom:3px}
+.cxd{font-size:11px;opacity:.75;line-height:1.5}
+
+/* RF GRID */
+.rfg{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:7px;margin:11px 0}
+.rfc{border-radius:var(--r);border:1px solid;padding:13px;text-align:center;cursor:pointer;transition:all .2s}
+.rfc:hover{transform:translateY(-2px)}
+.rfi{font-size:18px;margin-bottom:5px}
+.rfc2{font-family:var(--fm);font-size:13px;font-weight:700;margin-bottom:2px}
+.rfn{font-size:11px;opacity:.75}
+
+/* STEPS */
+.ps2{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--border)}
+.ps2:last-child{border-bottom:none}
+.sn{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px;font-family:var(--fm);background:rgba(59,130,246,.15);color:var(--accent3);border:1px solid rgba(59,130,246,.3)}
+.sb strong{font-size:12px;color:var(--text);font-weight:600;font-family:var(--fd)}
+.sb p{font-size:12px;color:var(--text2);margin:3px 0 0;line-height:1.6}
+
+/* ANALOGY */
+.atbl{width:100%;font-size:12px;margin:8px 0}
+.atbl td{padding:6px 10px;border-bottom:1px solid var(--border)}
+.atbl td:first-child{color:var(--accent3);font-family:var(--fm);font-weight:500}
+.atbl td:nth-child(2){color:var(--text3);text-align:center;font-size:14px}
+.atbl td:last-child{color:var(--gold2);font-family:var(--fm);font-weight:500}
+
+/* S2 CHIPS */
+.s2c{display:flex;flex-wrap:wrap;gap:6px;margin:7px 0 10px}
+.s2{padding:5px 11px;border-radius:100px;font-size:11px;font-weight:500;border:1px solid;cursor:pointer;transition:all .15s;font-family:var(--fd)}
+.s2:hover{opacity:.8;transform:translateY(-1px)}
+.s2p{background:rgba(124,58,237,.08);color:#6d28d9;border-color:rgba(124,58,237,.25)}
+.s2a{background:rgba(217,119,6,.08);color:#b45309;border-color:rgba(217,119,6,.25)}
+.s2g{background:rgba(22,163,74,.08);color:#15803d;border-color:rgba(22,163,74,.25)}
+
+/* LEGEND */
+.lg{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+.li{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3);font-family:var(--fd)}
+.ld{width:20px;height:3px;border-radius:2px}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--text3);font-size:12px;font-family:var(--fd)}
+footer strong{color:var(--text2)}
+.fbadge{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:6px 16px;font-size:11px;color:var(--text3);margin-top:12px;font-family:var(--fm)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Máq. Eléctricas <span>· Mario Miranda A.</span></div>
+  <div class="nav-links">
+    <a href="#magnetismo">Magnetismo</a>
+    <a href="#motores">Motores</a>
+    <a href="#polos">Polos</a>
+    <a href="#eficiencia">IE / Par</a>
+    <a href="#arranque">Arranque</a>
+    <a href="#protecciones">Protecciones</a>
+    <a href="#transformadores">Transformadores</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Material Educativo · Educación Superior · 2026</div>
+    <h1 class="hero-title">
+      <span class="l1">Máquinas</span>
+      <span class="l2">Eléctricas</span>
+      <span class="l3">Fundamentos · Clasificación · Aplicaciones</span>
+    </h1>
+    <p class="hero-intro">
+      Guía interactiva de referencia para el estudio de <strong>motores eléctricos DC y AC</strong>, <strong>transformadores</strong> y los fundamentos del electromagnetismo aplicado a máquinas eléctricas. Cubre desde variables magnéticas y leyes fundamentales — Ampère, Faraday, Lorentz — hasta la clasificación completa de motores con sus métodos de arranque, protecciones eléctricas, y transformadores con sus tipos de conexión y sistemas de refrigeración según normas IEC y SEC Chile.
+    </p>
+    <div class="hero-meta">
+      <div class="hero-tag"><div class="dot" style="background:var(--accent2)"></div>Mario Miranda Araos</div>
+      <div class="hero-tag"><div class="dot" style="background:var(--gold)"></div>Ingeniero Eléctrico</div>
+      <div class="hero-tag"><div class="dot" style="background:var(--gold)"></div>Lic. Cs. Ingeniería Eléctrica</div>
+      <div class="hero-tag"><div class="dot" style="background:var(--teal)"></div>Instalador SEC Clase A · Reg. 17.509.99-0</div>
+      <div class="hero-tag"><div class="dot" style="background:var(--accent2)"></div>CFT O'Higgins · AIEP San Fernando</div>
+    </div>
+    <div class="hero-sections">
+      <a class="hsc" href="#magnetismo"><div class="n">01</div><div class="t">Magnetismo</div></a>
+      <a class="hsc" href="#motores"><div class="n">02</div><div class="t">Motores DC / AC</div></a>
+      <a class="hsc" href="#polos"><div class="n">03</div><div class="t">Polos &amp; Velocidad</div></a>
+      <a class="hsc" href="#eficiencia"><div class="n">04</div><div class="t">Par &amp; Eficiencia</div></a>
+      <a class="hsc" href="#arranque"><div class="n">05</div><div class="t">Métodos Arranque</div></a>
+      <a class="hsc" href="#protecciones"><div class="n">06</div><div class="t">Protecciones</div></a>
+      <a class="hsc" href="#transformadores"><div class="n">07</div><div class="t">Transformadores</div></a>
+    </div>
+    <div class="hero-scroll">Explorar contenido</div>
+  </div>
+</section>
+<hr class="sd">
+
+<!-- ══════════ 01 MAGNETISMO ══════════ -->
+<section id="magnetismo" class="ps">
+  <div class="sh"><div class="se">01 — Fundamentos</div><h2 class="st">Variables y Leyes Magnéticas</h2><p class="ss">Magnitudes, analogías con circuitos eléctricos, leyes fundamentales y principios de funcionamiento de máquinas eléctricas.</p></div>
+
+  <div class="as">
+    <div class="ah" onclick="toggle('var')"><div class="at"><span class="ab-badge" style="background:rgba(139,92,246,.15);color:#c4b5fd;border:1px solid rgba(139,92,246,.3)">Variables</span>Variables y magnitudes magnéticas</div><span class="ach" id="ch-var">▾</span></div>
+    <div class="ab" id="b-var">
+      <div class="vg">
+        <div class="vc"><div class="vs" style="color:#93c5fd">B</div><div class="vn">Densidad de flujo</div><div class="vu">Tesla [T] = Wb/m²</div><div class="vd">Flujo por unidad de área. Intensidad del campo en el material.</div></div>
+        <div class="vc"><div class="vs" style="color:#5eead4">H</div><div class="vn">Intensidad de campo</div><div class="vu">Amperios/metro [A/m]</div><div class="vd">Esfuerzo magnetizante. Independiente del medio.</div></div>
+        <div class="vc"><div class="vs" style="color:#fcd34d">Φ</div><div class="vn">Flujo magnético</div><div class="vu">Weber [Wb]</div><div class="vd">Líneas de campo que atraviesan una sección. Φ = B·A.</div></div>
+        <div class="vc"><div class="vs" style="color:#fdba74">μ</div><div class="vn">Permeabilidad</div><div class="vu">Henry/metro [H/m]</div><div class="vd">Facilidad de conducir flujo. μ = μ₀·μᵣ. μ₀ = 4π×10⁻⁷.</div></div>
+        <div class="vc"><div class="vs" style="color:#86efac">ℱ</div><div class="vn">Fuerza magnetomotriz</div><div class="vu">Amperios-vuelta [A·v]</div><div class="vd">Capacidad de crear flujo. ℱ = N·I.</div></div>
+        <div class="vc"><div class="vs" style="color:#c4b5fd">ℛ</div><div class="vn">Reluctancia</div><div class="vu">A·v / Weber</div><div class="vd">Oposición al flujo. ℛ = l/(μ·A).</div></div>
+        <div class="vc"><div class="vs" style="color:#fca5a5">λ</div><div class="vn">Enlace de flujo</div><div class="vu">Weber-vuelta [Wb·v]</div><div class="vd">Flujo total enlazado. λ = N·Φ = L·i.</div></div>
+        <div class="vc"><div class="vs" style="color:#60a5fa">L</div><div class="vn">Inductancia</div><div class="vu">Henry [H]</div><div class="vd">Almacenamiento magnético. L = N²/ℛ = λ/i.</div></div>
+      </div>
+      <div class="dv"></div>
+      <div class="sl">Analogía circuito eléctrico ↔ magnético</div>
+      <table class="atbl">
+        <tr><td>Tensión V [V]</td><td>↔</td><td>FMM = N·I [A·v]</td></tr>
+        <tr><td>Corriente I [A]</td><td>↔</td><td>Flujo Φ [Wb]</td></tr>
+        <tr><td>Resistencia R [Ω]</td><td>↔</td><td>Reluctancia ℛ [A·v/Wb]</td></tr>
+        <tr><td>Conductancia G [S]</td><td>↔</td><td>Permeancia P [Wb/A·v]</td></tr>
+        <tr><td>Ley de Ohm: V = I·R</td><td>↔</td><td>Hopkinson: ℱ = Φ·ℛ</td></tr>
+      </table>
+      <div class="dv"></div>
+      <div class="sl">Curva B–H, histéresis y pérdidas</div>
+      <div class="chips">
+        <span class="chip c-purple" onclick="det('dv-bh')">Curva B–H</span>
+        <span class="chip c-teal" onclick="det('dv-hist')">Histéresis</span>
+        <span class="chip c-amber" onclick="det('dv-sat')">Saturación</span>
+        <span class="chip c-blue" onclick="det('dv-perd')">Pérdidas en el hierro</span>
+      </div>
+      <div class="db" id="dv-bh"><p class="dt">Curva B–H (magnetización)</p><div class="ir"><div class="d"></div><p>Relaciona B con H para un material ferromagnético. No es lineal. En zona lineal μᵣ constante (1000–10000 para aceros de silicio). Al crecer H el material se satura y μᵣ cae bruscamente.</p></div><div class="ir"><div class="d"></div><p>Las máquinas se diseñan en la "rodilla" de la curva (B ≈ 1,0–1,7 T) para máximo aprovechamiento sin saturación.</p></div></div>
+      <div class="db" id="dv-hist"><p class="dt">Ciclo de histéresis</p><div class="ir"><div class="d"></div><p>Al aplicar campo alterno, B no sigue el mismo camino al subir que al bajar H. El área del ciclo = energía disipada como calor por vuelta.</p></div><div class="ir"><div class="d"></div><p>Remanencia B<sub>r</sub>: flujo cuando H=0. Coercitividad H<sub>c</sub>: campo para desmagnetizar. Pérdidas por histéresis: P<sub>h</sub> = k<sub>h</sub>·f·B<sub>max</sub>ⁿ (ley de Steinmetz, n≈1,6–2).</p></div></div>
+      <div class="db" id="dv-sat"><p class="dt">Saturación magnética</p><div class="ir"><div class="d"></div><p>Sobre B ≈ 1,7–2,0 T la permeabilidad cae bruscamente. Se necesita mucha más FMM para aumentar levemente el flujo. Efectos: mayor corriente magnetizante, calentamiento y reducción del factor de potencia.</p></div></div>
+      <div class="db" id="dv-perd"><p class="dt">Pérdidas en el hierro</p><div class="ir"><div class="d"></div><p><strong>Histéresis P<sub>h</sub>:</strong> proporcional a f·B<sub>max</sub>¹·⁶. Se reduce con acero al silicio de ciclo angosto.</p></div><div class="ir"><div class="d"></div><p><strong>Corrientes de Foucault P<sub>e</sub>:</strong> proporcional a f²·B<sub>max</sub>²·e². Se reduce laminando el núcleo en chapas delgadas (0,35–0,65 mm) aisladas entre sí. P<sub>Fe</sub> = P<sub>h</sub> + P<sub>e</sub> ≈ 1–3% de la potencia nominal.</p></div></div>
+      <div class="dv"></div>
+      <div class="sl">Calculadora de circuito magnético con entrehierro</div>
+      <div class="cr"><label>Vueltas (N)</label><input type="range" id="cm-n" min="10" max="1000" value="200" step="10" oninput="calcMag()"><span class="vo" id="cm-n-o">200</span></div>
+      <div class="cr"><label>Corriente I (A)</label><input type="range" id="cm-i" min="0.1" max="20" value="2" step="0.1" oninput="calcMag()"><span class="vo" id="cm-i-o">2.0 A</span></div>
+      <div class="cr"><label>Longitud Fe (cm)</label><input type="range" id="cm-lfe" min="5" max="50" value="20" step="1" oninput="calcMag()"><span class="vo" id="cm-lfe-o">20 cm</span></div>
+      <div class="cr"><label>Entrehierro (mm)</label><input type="range" id="cm-lg" min="0.1" max="5" value="1" step="0.1" oninput="calcMag()"><span class="vo" id="cm-lg-o">1.0 mm</span></div>
+      <div class="cr"><label>Sección A (cm²)</label><input type="range" id="cm-a" min="1" max="50" value="10" step="1" oninput="calcMag()"><span class="vo" id="cm-a-o">10 cm²</span></div>
+      <div class="cr"><label>μᵣ del hierro</label><input type="range" id="cm-ur" min="100" max="5000" value="1000" step="50" oninput="calcMag()"><span class="vo" id="cm-ur-o">1000</span></div>
+      <div class="rr" id="mag-res"></div>
+    </div>
+  </div>
+
+  <div class="as">
+    <div class="ah" onclick="toggle('leyes')"><div class="at"><span class="ab-badge" style="background:rgba(20,184,166,.15);color:#5eead4;border:1px solid rgba(20,184,166,.3)">Leyes</span>Leyes magnéticas fundamentales</div><span class="ach" id="ch-leyes">▾</span></div>
+    <div class="ab" id="b-leyes">
+      <div class="chips">
+        <span class="chip c-teal" onclick="det('dl-amp')">Ley de Ampère</span>
+        <span class="chip c-purple" onclick="det('dl-far')">Ley de Faraday</span>
+        <span class="chip c-amber" onclick="det('dl-lenz')">Ley de Lenz</span>
+        <span class="chip c-blue" onclick="det('dl-biot')">Biot–Savart</span>
+        <span class="chip c-coral" onclick="det('dl-gauss')">Gauss magnética</span>
+        <span class="chip c-green" onclick="det('dl-hopk')">Hopkinson</span>
+        <span class="chip c-red" onclick="det('dl-lor')">Fuerza de Lorentz</span>
+      </div>
+      <div class="db" id="dl-amp"><p class="dt">Ley de Ampère</p><div class="fb"><div class="ff">∮ H · dl = N · I = ℱ</div><div class="fl">La integral de H a lo largo de un camino cerrado = corriente total encerrada (FMM).</div></div><div class="ir"><div class="d"></div><p>Base del diseño de circuitos magnéticos. Con entrehierro: N·I = H<sub>Fe</sub>·l<sub>Fe</sub> + H<sub>gap</sub>·l<sub>gap</sub>. El entrehierro domina porque μ<sub>vacío</sub> ≪ μ<sub>hierro</sub>.</p></div></div>
+      <div class="db" id="dl-far"><p class="dt">Ley de Faraday — Inducción electromagnética</p><div class="fb"><div class="ff">e = −N · dΦ/dt &nbsp;&nbsp;·&nbsp;&nbsp; e = B · l · v</div><div class="fl">e = FEM inducida [V] · N = vueltas · Φ = flujo [Wb] · l = longitud activa [m] · v = velocidad [m/s]</div></div><div class="ir"><div class="d"></div><p>Fundamento de generadores, transformadores y la FEM contraelectromotriz de motores. Una variación de flujo induce una tensión proporcional a esa variación.</p></div></div>
+      <div class="db" id="dl-lenz"><p class="dt">Ley de Lenz</p><div class="fb"><div class="ff">La FEM inducida se opone a la causa que la origina</div></div><div class="ir"><div class="d"></div><p>FEM contraelectromotriz (FCEM) en motores DC: E<sub>c</sub> = K·Φ·n. Al aumentar la carga, n baja → E<sub>c</sub> baja → I<sub>a</sub> = (V−E<sub>c</sub>)/R<sub>a</sub> aumenta → más par. Mecanismo autorregulador.</p></div></div>
+      <div class="db" id="dl-biot"><p class="dt">Ley de Biot–Savart</p><div class="fb"><div class="ff">dB = (μ₀/4π) · (I · dl × r̂) / r²</div></div><div class="ir"><div class="d"></div><p>Campo magnético producido por cualquier distribución de corriente. Para conductor recto largo: B = μ₀·I/(2π·r). Permite analizar el campo de los devanados del estátor.</p></div></div>
+      <div class="db" id="dl-gauss"><p class="dt">Ley de Gauss magnética</p><div class="fb"><div class="ff">∮ B · dA = 0</div><div class="fl">No existen monopolos magnéticos. Las líneas de campo son siempre cerradas.</div></div><div class="ir"><div class="d"></div><p>Todo flujo que entra a un núcleo sale por otra cara. Base del cálculo de transformadores: el flujo en serie se conserva.</p></div></div>
+      <div class="db" id="dl-hopk"><p class="dt">Ley de Hopkinson</p><div class="fb"><div class="ff">ℱ = Φ · ℛ &nbsp;&nbsp;→&nbsp;&nbsp; N·I = Φ · (l / μ·A)</div><div class="fl">Análoga a Ohm: ℱ ↔ V · Φ ↔ I · ℛ ↔ R</div></div><div class="ir"><div class="d"></div><p>Permite analizar circuitos magnéticos usando técnicas de Kirchhoff. Reluctancias en serie: ℛ<sub>T</sub> = ℛ₁+ℛ₂+… El entrehierro domina siempre la reluctancia total.</p></div></div>
+      <div class="db" id="dl-lor"><p class="dt">Fuerza de Lorentz — origen del par motor</p><div class="fb"><div class="ff">F = I · l × B &nbsp;&nbsp;→&nbsp;&nbsp; T = K · Φ · Iₐ</div><div class="fl">F = fuerza [N] · I = corriente [A] · l = longitud activa [m] · B = densidad de flujo [T]</div></div><div class="ir"><div class="d"></div><p>Regla de la mano izquierda de Fleming para motores. En generadores actúa a la inversa: un conductor moviéndose en un campo magnético genera FEM (e = Blv).</p></div></div>
+    </div>
+  </div>
+
+  <div class="as">
+    <div class="ah" onclick="toggle('princ')"><div class="at"><span class="ab-badge" style="background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.3)">Principios</span>Principios de funcionamiento de máquinas eléctricas</div><span class="ach" id="ch-princ">▾</span></div>
+    <div class="ab" id="b-princ">
+      <div class="chips">
+        <span class="chip c-amber" onclick="det('dp-dcm')">Motor DC</span>
+        <span class="chip c-amber" onclick="det('dp-dcg')">Generador DC</span>
+        <span class="chip c-teal" onclick="det('dp-ind')">Motor inducción</span>
+        <span class="chip c-blue" onclick="det('dp-sinm')">Motor síncrono</span>
+        <span class="chip c-blue" onclick="det('dp-sing')">Alternador</span>
+        <span class="chip c-purple" onclick="det('dp-trf')">Transformador</span>
+      </div>
+      <div class="db" id="dp-dcm"><p class="dt">Motor DC — principio de funcionamiento</p><div class="ps2"><div class="sn">1</div><div class="sb"><strong>Campo magnético estacionario</strong><p>Devanado de campo (o imanes permanentes) en el estátor crea campo fijo Φ en el entrehierro.</p></div></div><div class="ps2"><div class="sn">2</div><div class="sb"><strong>Corriente en el inducido</strong><p>Tensión V<sub>a</sub> impulsa I<sub>a</sub> por el rotor vía escobillas y colector de delgas.</p></div></div><div class="ps2"><div class="sn">3</div><div class="sb"><strong>Fuerza de Lorentz → par</strong><p>F = B·I·l sobre conductores del inducido → par T = K·Φ·I<sub>a</sub>.</p></div></div><div class="ps2"><div class="sn">4</div><div class="sb"><strong>FCEM contraelectromotriz</strong><p>E<sub>c</sub> = K·Φ·n se opone a V<sub>a</sub> (Lenz). En régimen: I<sub>a</sub> = (V<sub>a</sub>−E<sub>c</sub>)/R<sub>a</sub>.</p></div></div><div class="ps2"><div class="sn">5</div><div class="sb"><strong>Conmutación</strong><p>El colector invierte la corriente en cada conductor al pasar por la línea neutra → par siempre en el mismo sentido.</p></div></div><div class="fb" style="margin-top:8px"><div class="ff">T = K·Φ·Iₐ &nbsp;·&nbsp; E<sub>c</sub> = K·Φ·n &nbsp;·&nbsp; n = (V<sub>a</sub>−Iₐ·Rₐ)/(K·Φ)</div></div></div>
+      <div class="db" id="dp-dcg"><p class="dt">Generador DC</p><div class="ps2"><div class="sn">1</div><div class="sb"><strong>Movimiento mecánico</strong><p>Fuerza externa gira el inducido en el campo estacionario del estátor.</p></div></div><div class="ps2"><div class="sn">2</div><div class="sb"><strong>FEM inducida (Faraday)</strong><p>Conductores del rotor cortan líneas de flujo → e = B·l·v. FEM alterna → el colector la rectifica a DC.</p></div></div><div class="ps2"><div class="sn">3</div><div class="sb"><strong>Par de reacción (Lenz)</strong><p>Al circular I<sub>a</sub> por la carga, se genera par de frenado que el motor primario debe vencer.</p></div></div><div class="fb" style="margin-top:8px"><div class="ff">E<sub>g</sub> = K·Φ·n &nbsp;·&nbsp; V<sub>t</sub> = E<sub>g</sub>−Iₐ·Rₐ &nbsp;·&nbsp; P<sub>elec</sub> = E<sub>g</sub>·Iₐ</div></div></div>
+      <div class="db" id="dp-ind"><p class="dt">Motor de inducción trifásico</p><div class="ps2"><div class="sn">1</div><div class="sb"><strong>Campo magnético giratorio</strong><p>Las tres fases del estátor crean un campo que gira a n<sub>s</sub> = 120f/p.</p></div></div><div class="ps2"><div class="sn">2</div><div class="sb"><strong>Inducción en el rotor</strong><p>El campo giratorio corta conductores del rotor → induce FEM y corriente proporcional al deslizamiento s.</p></div></div><div class="ps2"><div class="sn">3</div><div class="sb"><strong>Fuerza → par (Lorentz)</strong><p>Corriente inducida + campo del estátor → arrastra el rotor en el mismo sentido del campo giratorio.</p></div></div><div class="ps2"><div class="sn">4</div><div class="sb"><strong>Deslizamiento necesario</strong><p>Si n<sub>r</sub> = n<sub>s</sub> no hay corte → sin FEM → sin corriente → sin par. El deslizamiento s = (n<sub>s</sub>−n<sub>r</sub>)/n<sub>s</sub> es condición de operación.</p></div></div><div class="fb" style="margin-top:8px"><div class="ff">s = (n<sub>s</sub>−n<sub>r</sub>)/n<sub>s</sub> &nbsp;·&nbsp; P<sub>mec</sub> = (1−s)·P<sub>gap</sub> &nbsp;·&nbsp; P<sub>rotor</sub> = s·P<sub>gap</sub></div></div></div>
+      <div class="db" id="dp-sinm"><p class="dt">Motor síncrono</p><div class="ps2"><div class="sn">1</div><div class="sb"><strong>Campo giratorio del estátor</strong><p>Igual que motor de inducción: n<sub>s</sub> = 120f/p.</p></div></div><div class="ps2"><div class="sn">2</div><div class="sb"><strong>Enganche (lock-step)</strong><p>Polos del rotor (imanes o devanado DC) se "enganchan" al campo giratorio y giran exactamente a n<sub>s</sub>.</p></div></div><div class="ps2"><div class="sn">3</div><div class="sb"><strong>Ángulo de carga δ</strong><p>A mayor carga → mayor δ. Si δ &gt; 90° → pérdida de sincronismo.</p></div></div><div class="fb" style="margin-top:8px"><div class="ff">T = (3·V<sub>s</sub>·E<sub>f</sub>·sin δ)/(ω<sub>s</sub>·X<sub>s</sub>) &nbsp;·&nbsp; n<sub>r</sub> = n<sub>s</sub> siempre</div></div></div>
+      <div class="db" id="dp-sing"><p class="dt">Generador síncrono (Alternador)</p><div class="ps2"><div class="sn">1</div><div class="sb"><strong>Excitación del rotor</strong><p>Corriente DC en devanado de campo → campo magnético giratorio junto con el rotor.</p></div></div><div class="ps2"><div class="sn">2</div><div class="sb"><strong>FEM trifásica (Faraday)</strong><p>Campo giratorio induce FEM en estátor. Frecuencia: f = p·n/120.</p></div></div><div class="ps2"><div class="sn">3</div><div class="sb"><strong>Control P y Q</strong><p>Potencia activa: variando par del motor primario (→ δ). Potencia reactiva: variando excitación DC del rotor.</p></div></div><div class="fb" style="margin-top:8px"><div class="ff">E<sub>f</sub> = K·Φ·n &nbsp;·&nbsp; f = p·n/120 &nbsp;·&nbsp; P = 3·V·E<sub>f</sub>·sin(δ)/X<sub>s</sub></div></div></div>
+      <div class="db" id="dp-trf"><p class="dt">Transformador</p><div class="ps2"><div class="sn">1</div><div class="sb"><strong>Flujo magnético común</strong><p>Corriente alterna en primario → flujo alterno Φ en núcleo compartido por ambos devanados.</p></div></div><div class="ps2"><div class="sn">2</div><div class="sb"><strong>Inducción en secundario</strong><p>e₂ = −N₂·dΦ/dt. Relación a = N₁/N₂ = V₁/V₂ = I₂/I₁.</p></div></div><div class="ps2"><div class="sn">3</div><div class="sb"><strong>Conservación de potencia</strong><p>S₁ = S₂ → V₁·I₁ = V₂·I₂. Eficiencia real 95–99%.</p></div></div><div class="fb" style="margin-top:8px"><div class="ff">a = N₁/N₂ = V₁/V₂ = I₂/I₁ &nbsp;·&nbsp; η = P<sub>sal</sub>/(P<sub>sal</sub>+P<sub>Fe</sub>+P<sub>Cu</sub>)</div></div></div>
+      <div class="dv"></div>
+      <div class="sl">Comparación de máquinas eléctricas</div>
+      <table class="tbl">
+        <thead><tr><th>Máquina</th><th>Ley principal</th><th>Velocidad</th><th>Aplicación típica</th></tr></thead>
+        <tbody>
+          <tr><td>Motor DC</td><td>Lorentz + Lenz</td><td>Variable (V o Φ)</td><td>Tracción, grúas, control preciso</td></tr>
+          <tr><td>Motor inducción</td><td>Faraday + Lorentz</td><td>≈ constante (slip)</td><td>Industria general, bombas, ventiladores</td></tr>
+          <tr><td>Motor síncrono</td><td>Lorentz (enganche)</td><td>Exactamente n<sub>s</sub></td><td>Alta eficiencia, velocidad fija precisa</td></tr>
+          <tr><td>Generador DC</td><td>Faraday + conmutación</td><td>Impuesta externamente</td><td>Cargadores, electroquímica</td></tr>
+          <tr><td>Alternador</td><td>Faraday (rotor giratorio)</td><td>f = p·n/120</td><td>Generación eléctrica, grupos electrógenos</td></tr>
+          <tr><td>Transformador</td><td>Faraday (flujo estático)</td><td>Sin partes móviles</td><td>Distribución y transmisión eléctrica</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<hr class="sd">
+
+<!-- ══════════ 02 MOTORES ══════════ -->
+<section id="motores" class="ps">
+  <div class="sh"><div class="se">02 — Clasificación</div><h2 class="st">Clasificación de Motores Eléctricos</h2><p class="ss">DC y AC con todos sus subtipos, incluyendo monofásicos y trifásicos jaula de ardilla con conexiones y condensadores.</p></div>
+
+  <div class="as">
+    <div class="ah" onclick="toggle('dc')"><div class="at"><span class="ab-badge" style="background:rgba(249,115,22,.15);color:#fdba74;border:1px solid rgba(249,115,22,.3)">DC</span>Motor de Corriente Continua</div><span class="ach" id="ch-dc">▾</span></div>
+    <div class="ab" id="b-dc">
+      <div class="chips">
+        <span class="chip c-gray" onclick="det('d-pmdc')">PMDC — Imanes permanentes</span>
+        <span class="chip c-coral" onclick="det('d-auto')">Autoexcitado</span>
+        <span class="chip c-blue" onclick="det('d-sep')">Excitación separada</span>
+      </div>
+      <div class="db" id="d-pmdc"><p class="dt">PMDC — Motor de imanes permanentes</p><div class="ir"><div class="d"></div><p>Imanes permanentes generan el campo magnético. Sin devanado de campo. Simple y compacto. Común en baja potencia: herramientas eléctricas, juguetes, actuadores.</p></div></div>
+      <div class="db" id="d-auto"><p class="dt">Motor autoexcitado</p><p style="font-size:12px;color:var(--text2);margin:4px 0 10px">Campo generado por la corriente del propio inducido. Tres configuraciones:</p>
+        <div class="chips"><span class="chip c-teal" onclick="det('d-shunt')">Shunt</span><span class="chip c-teal" onclick="det('d-serie')">Serie</span><span class="chip c-teal" onclick="det('d-comp')">Compound</span></div>
+        <div class="db" id="d-shunt"><p class="dt">Shunt (derivación)</p><div class="ir"><div class="d"></div><p>Devanado de campo en paralelo con el inducido. Velocidad prácticamente constante. Ideal para bombas, ventiladores, cargas que requieren velocidad estable.</p></div></div>
+        <div class="db" id="d-serie"><p class="dt">Serie</p><div class="ir"><div class="d"></div><p>Devanado en serie con el inducido. Alto par de arranque (2–3× nominal). Tracción, grúas, compresores. No debe funcionar en vacío: velocidad puede dispararse peligrosamente.</p></div></div>
+        <div class="db" id="d-comp"><p class="dt">Compound (compuesto)</p><div class="ir"><div class="d"></div><p>Combina devanados serie y derivación. Buen par de arranque y velocidad relativamente estable. Prensas, laminadoras, compresores de pistón.</p></div></div>
+      </div>
+      <div class="db" id="d-sep"><p class="dt">Excitación separada</p><p style="font-size:12px;color:var(--text2);margin:4px 0 10px">Campo alimentado por fuente independiente. Control preciso de velocidad y par. Base para los motores de reluctancia:</p>
+        <div class="chips"><span class="chip c-teal" onclick="det('d-rel')">Reluctancia</span><span class="chip c-teal" onclick="det('d-sr')">SR-Motor</span><span class="chip c-teal" onclick="det('d-syn')">SynRM</span></div>
+        <div class="db" id="d-rel"><p class="dt">Motor de reluctancia</p><div class="ir"><div class="d"></div><p>Opera por diferencia de reluctancia magnética en el rotor. Sin devanado ni imanes en el rotor.</p></div></div>
+        <div class="db" id="d-sr"><p class="dt">SR-Motor — Reluctancia conmutado</p><div class="ir"><div class="d"></div><p>Polos salientes en estátor y rotor. Controlado electrónicamente. Robusto, sin escobillas. Alta eficiencia en velocidad variable.</p></div></div>
+        <div class="db" id="d-syn"><p class="dt">SynRM — Reluctancia síncrono</p><div class="ir"><div class="d"></div><p>Rotor con barreras de flujo anisótropas. Sin imanes ni devanados en el rotor. Eficiencia comparable al PMSM. Clase IE4.</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="as">
+    <div class="ah" onclick="toggle('ac')"><div class="at"><span class="ab-badge" style="background:rgba(59,130,246,.15);color:#93c5fd;border:1px solid rgba(59,130,246,.3)">AC</span>Motor de Corriente Alterna</div><span class="ach" id="ch-ac">▾</span></div>
+    <div class="ab" id="b-ac">
+      <div class="chips">
+        <span class="chip c-blue" onclick="det('d-sinc')">Motor síncrono</span>
+        <span class="chip c-coral" onclick="det('d-induc')">Motor de inducción (MI)</span>
+      </div>
+      <div class="db" id="d-sinc"><p class="dt">Motor síncrono</p><p style="font-size:12px;color:var(--text2);margin:4px 0 10px">Rotor gira exactamente a n<sub>s</sub>. Subtipos según tipo de campo en el rotor:</p>
+        <div class="chips"><span class="chip c-teal" onclick="det('d-pmsm')">PMSM</span><span class="chip c-teal" onclick="det('d-sesm')">SESM</span><span class="chip c-teal" onclick="det('d-spmsm')">SPMSM</span><span class="chip c-teal" onclick="det('d-ipmsm')">IPMSM</span></div>
+        <div class="db" id="d-pmsm"><p class="dt">PMSM — Imán permanente síncrono</p><div class="ir"><div class="d"></div><p>Alta eficiencia y densidad de potencia. Muy usado en variadores de frecuencia y vehículos eléctricos.</p></div></div>
+        <div class="db" id="d-sesm"><p class="dt">SESM — Excitación separada síncrono</p><div class="ir"><div class="d"></div><p>Control preciso del factor de potencia. Grandes plantas industriales y generadores síncronos.</p></div></div>
+        <div class="db" id="d-spmsm"><p class="dt">SPMSM — Imán en superficie</p><div class="ir"><div class="d"></div><p>Imanes montados en la superficie del rotor. Alta constante de par. Alta velocidad y respuesta dinámica rápida.</p></div></div>
+        <div class="db" id="d-ipmsm"><p class="dt">IPMSM — Imán interior</p><div class="ir"><div class="d"></div><p>Imanes embebidos dentro del rotor. Aprovecha reluctancia adicional. Mayor par a baja velocidad. Estándar en vehículos eléctricos (Toyota Prius, Tesla).</p></div></div>
+      </div>
+      <div class="db" id="d-induc"><p class="dt">Motor de inducción (asíncrono)</p><p style="font-size:12px;color:var(--text2);margin:4px 0 10px">Rotor con deslizamiento. El más usado en la industria. Subtipos según tipo de rotor:</p>
+        <div class="chips"><span class="chip c-teal" onclick="det('d-jaula')">Jaula de ardilla</span><span class="chip c-teal" onclick="det('d-anillo')">Rotor bobinado (anillos)</span></div>
+        <div class="db" id="d-jaula"><p class="dt">Jaula de ardilla</p><p style="font-size:12px;color:var(--text2);margin:4px 0 10px">Barras conductoras cortocircuitadas. Robusto, económico, sin escobillas. Según alimentación:</p>
+          <div class="chips"><span class="chip c-purple" onclick="det('d-mono')">1~ Monofásico</span><span class="chip c-teal" onclick="det('d-tri')">3~ Trifásico</span></div>
+          <div class="db" id="d-mono"><p class="dt">Monofásico jaula de ardilla</p><p style="font-size:12px;color:var(--text2);margin:4px 0 10px">No es autorrancante. Requiere devanado auxiliar o condensador. Tipos según método de arranque:</p>
+            <div class="s2c">
+              <span class="s2 s2p" onclick="det2('d-resis')">Resistencia de arranque</span>
+              <span class="s2 s2a" onclick="det2('d-carr')">Condensador de arranque</span>
+              <span class="s2 s2a" onclick="det2('d-cper')">Condensador permanente (PSC)</span>
+              <span class="s2 s2a" onclick="det2('d-2cond')">Dos condensadores</span>
+              <span class="s2 s2p" onclick="det2('d-psomb')">Polo sombreado</span>
+            </div>
+            <div class="db" id="d-resis"><p class="dt">Arranque por resistencia (Split-phase)</p><div class="ir"><div class="d"></div><p>Devanado auxiliar de mayor resistencia. Desfase de corriente para el arranque. Interruptor centrífugo al 75–80% de velocidad nominal. Par de arranque moderado. Uso: electrodomésticos, bombas pequeñas, ventiladores.</p></div></div>
+            <div class="db" id="d-carr"><p class="dt">Condensador de arranque (Capacitor-start)</p><div class="ir"><div class="d"></div><p>Condensador electrolítico en serie con devanado auxiliar. Desfase ~90° → par arranque 2,5–3× nominal. Se desconecta con interruptor centrífugo al alcanzar la velocidad. Uso: compresores, bombas, refrigeración.</p></div></div>
+            <div class="db" id="d-cper"><p class="dt">Condensador permanente (PSC)</p><div class="ir"><div class="d"></div><p>Condensador de film siempre conectado al devanado auxiliar. Sin interruptor centrífugo. Operación silenciosa y eficiente. Bajo par de arranque. Ventiladores de techo, fan-coils. Admite inversión de giro cambiando la conexión del condensador.</p></div></div>
+            <div class="db" id="d-2cond"><p class="dt">Dos condensadores (Capacitor start – Capacitor run)</p><div class="ir"><div class="d"></div><p>Condensador electrolítico de arranque (gran capacitancia) + condensador de film permanente (menor capacitancia). El electrolítico se desconecta al llegar a velocidad nominal. Alto par de arranque + alta eficiencia en marcha. Uso: compresores herméticos, bombas de alta exigencia.</p></div></div>
+            <div class="db" id="d-psomb"><p class="dt">Polo sombreado (Shaded-pole)</p><div class="ir"><div class="d"></div><p>Anillo de cortocircuito (espira de sombra) en una porción del polo. Sin condensador ni devanado auxiliar. Muy simple y económico. Bajo par y eficiencia reducida. Hasta ~50 W. Giro fijo (no reversible sin modificar el polo). Uso: ventiladores pequeños, electrodomésticos.</p></div></div>
+          </div>
+          <div class="db" id="d-tri"><p class="dt">Trifásico jaula de ardilla</p><p style="font-size:12px;color:var(--text2);margin:4px 0 10px">Autorrancante gracias al campo magnético trifásico. Sin condensadores. El más usado en la industria. Tipos según conexión del estátor:</p>
+            <div class="s2c">
+              <span class="s2 s2g" onclick="det2('d-ye')">Estrella (Y)</span>
+              <span class="s2 s2g" onclick="det2('d-delta')">Triángulo (Δ)</span>
+              <span class="s2 s2g" onclick="det2('d-ydelta')">Arranque Y–Δ</span>
+              <span class="s2 s2g" onclick="det2('d-dahl')">Dahlander</span>
+            </div>
+            <div class="db" id="d-ye"><p class="dt">Conexión estrella (Y)</p><div class="ir"><div class="d"></div><p>Cada bobina recibe V<sub>L</sub>/√3. Menor tensión por devanado → menor corriente de arranque. Potencia ~33% menor que en Δ. Usado para arranque suave en motores diseñados para Δ.</p></div></div>
+            <div class="db" id="d-delta"><p class="dt">Conexión triángulo (Δ)</p><div class="ir"><div class="d"></div><p>Cada bobina recibe la tensión de línea completa. Mayor corriente y potencia. Operación normal de la mayoría de motores industriales trifásicos de media y alta potencia.</p></div></div>
+            <div class="db" id="d-ydelta"><p class="dt">Arranque estrella–triángulo (Y–Δ)</p><div class="ir"><div class="d"></div><p>Arranca en Y: corriente se reduce a 1/3 del valor DOL. Al ~80% de la velocidad nominal, un contactor conmuta a Δ para operación plena. Requiere 3 contactores + temporizador. El motor debe estar diseñado para Δ en tensión de red.</p></div></div>
+            <div class="db" id="d-dahl"><p class="dt">Motor Dahlander (doble velocidad)</p><div class="ir"><div class="d"></div><p>Devanado especial que permite dos configuraciones de polos: Δ (más polos, velocidad baja) y YY (menos polos, velocidad alta). Relación 1:2 fija. Ej: 4/8 polos → 1500/750 rpm a 50 Hz. Bombas y ventiladores de dos velocidades fijas.</p></div></div>
+          </div>
+        </div>
+        <div class="db" id="d-anillo"><p class="dt">Rotor bobinado — Anillos rozantes</p><div class="ir"><div class="d"></div><p>Devanado accesible por anillos y escobillas. Permite agregar resistencia externa al rotor para control de arranque en cargas pesadas. Elevadores, grúas, laminadoras.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="sd">
+
+<!-- ══════════ 03 POLOS ══════════ -->
+<section id="polos" class="ps">
+  <div class="sh"><div class="se">03 — Velocidad</div><h2 class="st">Polos, Velocidad Sincrónica y Deslizamiento</h2><p class="ss">Fórmulas, tabla de velocidades, calculadora interactiva y métodos de variación de velocidad.</p></div>
+  <div class="as">
+    <div class="ah" onclick="toggle('polo')"><div class="at"><span class="ab-badge" style="background:rgba(139,92,246,.15);color:#c4b5fd;border:1px solid rgba(139,92,246,.3)">Polos</span>Número de polos y velocidad de giro</div><span class="ach" id="ch-polo">▾</span></div>
+    <div class="ab" id="b-polo">
+      <div class="fb"><div class="ff">n<sub>s</sub> = (120 × f) / p</div><div class="fl">n<sub>s</sub> = velocidad sincrónica (rpm) · f = frecuencia (Hz) · p = número de polos</div></div>
+      <div class="sl" style="margin-top:14px">Calculadora de velocidad sincrónica</div>
+      <div class="cr"><label>Frecuencia</label><select id="sel-f" onchange="calcVel()"><option value="50">50 Hz (Chile / Europa)</option><option value="60">60 Hz (EE.UU.)</option></select></div>
+      <div class="cr"><label>Polos (p)</label><select id="sel-p" onchange="calcVel()"><option value="2">2 polos</option><option value="4" selected>4 polos</option><option value="6">6 polos</option><option value="8">8 polos</option><option value="10">10 polos</option><option value="12">12 polos</option></select></div>
+      <div class="cr"><label style="color:var(--text3);font-size:12px">Velocidad sincrónica →</label><span style="font-size:22px;font-weight:700;color:var(--accent2);font-family:var(--fm)" id="vel-out">1500</span><span style="font-size:13px;color:var(--text3);margin-left:5px">rpm</span></div>
+      <div class="dv"></div>
+      <table class="tbl">
+        <thead><tr><th>Polos (p)</th><th>50 Hz (rpm)</th><th>60 Hz (rpm)</th><th>Aplicaciones típicas</th></tr></thead>
+        <tbody>
+          <tr><td>2</td><td>3000</td><td>3600</td><td>Bombas centrífugas, compresores, turboventiladores</td></tr>
+          <tr><td>4</td><td>1500</td><td>1800</td><td>Bombas, ventiladores, cintas transportadoras (más común)</td></tr>
+          <tr><td>6</td><td>1000</td><td>1200</td><td>Compresores de tornillo, agitadores</td></tr>
+          <tr><td>8</td><td>750</td><td>900</td><td>Grúas, trituradoras, molinos de bolas</td></tr>
+          <tr><td>10</td><td>600</td><td>720</td><td>Mezcladoras pesadas, extrusoras</td></tr>
+          <tr><td>12</td><td>500</td><td>600</td><td>Minas, laminadoras, tracción de baja velocidad</td></tr>
+        </tbody>
+      </table>
+      <div class="dv"></div>
+      <div class="sl">Deslizamiento en motores de inducción</div>
+      <div class="fb"><div class="ff">s = (n<sub>s</sub> − n<sub>r</sub>) / n<sub>s</sub> × 100%</div><div class="fl">Valor típico: 2–8% · Motor 4 polos 50 Hz: n<sub>s</sub>=1500 rpm, con s=4% → n<sub>r</sub>≈1440 rpm (velocidad de placa)</div></div>
+      <div class="dv"></div>
+      <div class="sl">Efectos del número de polos</div>
+      <div class="chips">
+        <span class="chip c-purple" onclick="det('dp-vel')">Velocidad y par</span>
+        <span class="chip c-amber" onclick="det('dp-tam')">Tamaño físico</span>
+        <span class="chip c-teal" onclick="det('dp-efi')">Eficiencia</span>
+        <span class="chip c-gray" onclick="det('dp-rui')">Ruido y vibración</span>
+      </div>
+      <div class="db" id="dp-vel"><p class="dt">Velocidad y par</p><div class="ir"><div class="d"></div><p>A menor número de polos → mayor velocidad → menor par para la misma potencia (P = T × ω). Motores de 2 polos: alta velocidad, bajo par. Motores de 8–12 polos: baja velocidad, alto par — accionamiento directo sin reductor.</p></div></div>
+      <div class="db" id="dp-tam"><p class="dt">Tamaño físico</p><div class="ir"><div class="d"></div><p>A igual potencia, un motor de más polos es más grande y pesado: necesita más bobinas y más hierro para alojar los polos adicionales. Un motor de 2 polos 22 kW es notablemente más compacto que uno de 8 polos de igual potencia.</p></div></div>
+      <div class="db" id="dp-efi"><p class="dt">Eficiencia</p><div class="ir"><div class="d"></div><p>Los motores de 4 polos son generalmente los más eficientes de su clase y son el estándar IE3/IE4. A muy bajo número (2p) aumentan las pérdidas por fricción y ventilación. A muy alto número (10–12p) aumentan las pérdidas en el hierro.</p></div></div>
+      <div class="db" id="dp-rui"><p class="dt">Ruido y vibración</p><div class="ir"><div class="d"></div><p>Los motores de 2 polos (3000 rpm a 50 Hz) generan más ruido aerodinámico y vibración. Para aplicaciones silenciosas (HVAC, hospitales) se prefieren 4–6 polos o VFD operando a velocidad reducida.</p></div></div>
+      <div class="dv"></div>
+      <div class="sl">Métodos de cambio de velocidad</div>
+      <div class="chips">
+        <span class="chip c-teal" onclick="det('dp-dahl')">Motor Dahlander</span>
+        <span class="chip c-blue" onclick="det('dp-mbob')">Multidevanado</span>
+        <span class="chip c-amber" onclick="det('dp-vfd')">Variador VFD</span>
+      </div>
+      <div class="db" id="dp-dahl"><p class="dt">Motor Dahlander</p><div class="ir"><div class="d"></div><p>Relación siempre 1:2 (ej. 4/8 polos → 1500/750 rpm a 50 Hz). Δ = velocidad baja, YY = velocidad alta. Económico, sin electrónica. Ventiladores industriales, bombas con dos velocidades fijas.</p></div></div>
+      <div class="db" id="dp-mbob"><p class="dt">Motor multidevanado</p><div class="ir"><div class="d"></div><p>Dos devanados independientes con diferente número de polos. Permite relaciones distintas de 1:2 (ej. 4/6 polos → 1500/1000 rpm). Mayor flexibilidad. Grúas, ascensores, máquinas herramienta.</p></div></div>
+      <div class="db" id="dp-vfd"><p class="dt">Variador de frecuencia (VFD)</p><div class="ir"><div class="d"></div><p>Modifica la frecuencia de alimentación → cambia n<sub>s</sub> de forma continua. n<sub>s</sub> = 120·f<sub>VFD</sub>/p. Ahorro energético 20–50% en bombas y ventiladores (Ley de afinidad: P ∝ n³).</p></div></div>
+    </div>
+  </div>
+</section>
+<hr class="sd">
+
+<!-- ══════════ 04 EFICIENCIA ══════════ -->
+<section id="eficiencia" class="ps">
+  <div class="sh"><div class="se">04 — Eficiencia</div><h2 class="st">Curvas de Par y Clases de Eficiencia IE</h2><p class="ss">Curva par–velocidad, clases NEMA, niveles IE según IEC 60034-30 y calculadora de ahorro energético.</p></div>
+
+  <div class="as">
+    <div class="ah" onclick="toggle('par')"><div class="at"><span class="ab-badge" style="background:rgba(20,184,166,.15);color:#5eead4;border:1px solid rgba(20,184,166,.3)">Par</span>Curvas de par — motor de inducción trifásico</div><span class="ach" id="ch-par">▾</span></div>
+    <div class="ab" id="b-par">
+      <div class="cr"><label>Polos (p)</label><select id="par-p" onchange="drawPar()"><option value="2">2 polos — 3000 rpm</option><option value="4" selected>4 polos — 1500 rpm</option><option value="6">6 polos — 1000 rpm</option><option value="8">8 polos — 750 rpm</option></select></div>
+      <div class="cr"><label>Deslizamiento nominal</label><input type="range" id="par-s" min="2" max="10" value="5" step="1" oninput="document.getElementById('par-so').textContent=this.value+'%';drawPar()"><span class="vo" id="par-so">5%</span></div>
+      <div class="cw"><canvas id="parC" height="200"></canvas></div>
+      <div class="lg"><div class="li"><div class="ld" style="background:#14b8a6"></div>Par motor</div><div class="li"><div class="ld" style="border-top:2px dashed #f97316;width:20px;background:none"></div>Par nominal</div></div>
+      <div class="dv"></div>
+      <div class="chips">
+        <span class="chip c-teal" onclick="det('dpt-arr')">Par de arranque</span>
+        <span class="chip c-amber" onclick="det('dpt-max')">Par máximo</span>
+        <span class="chip c-blue" onclick="det('dpt-nom')">Par nominal</span>
+        <span class="chip c-red" onclick="det('dpt-pull')">Pullout / colapso</span>
+      </div>
+      <div class="db" id="dpt-arr"><p class="dt">Par de arranque (T<sub>arranque</sub>)</p><div class="ir"><div class="d"></div><p>Par con rotor bloqueado (n=0, s=1). Típicamente 1,5–2,5× T<sub>nom</sub> según clase NEMA. Debe ser mayor que el par resistente de la carga para que el motor arranque.</p></div></div>
+      <div class="db" id="dpt-max"><p class="dt">Par máximo (par de vuelco)</p><div class="ir"><div class="d"></div><p>Valor más alto de par posible. Ocurre a s<sub>cr</sub> ≈ 10–20%. Típicamente 2–3,5× T<sub>nom</sub>. Si la carga supera T<sub>max</sub>, el motor se detiene (fenómeno de vuelco o pullout).</p></div></div>
+      <div class="db" id="dpt-nom"><p class="dt">Par nominal</p><div class="ir"><div class="d"></div><p>Par de operación continua a velocidad y potencia nominales. Deslizamiento 2–8%. Se calcula: T<sub>nom</sub> = P<sub>nom</sub> × 9550 / n<sub>nom</sub> (N·m, kW, rpm).</p></div></div>
+      <div class="db" id="dpt-pull"><p class="dt">Pullout (colapso de par)</p><div class="ir"><div class="d"></div><p>Región inestable entre s=1 y s=s<sub>cr</sub>. Si la carga supera T<sub>max</sub>, el motor no se recupera y se detiene por sobrecorriente. El relé térmico actúa en esta zona.</p></div></div>
+      <div class="dv"></div>
+      <table class="tbl">
+        <thead><tr><th>Clase NEMA</th><th>T arranque</th><th>Desliz. nom.</th><th>Aplicación típica</th></tr></thead>
+        <tbody>
+          <tr><td>A</td><td>Normal (1,5–2×)</td><td>&lt;5%</td><td>Ventiladores, bombas, par cuadrático</td></tr>
+          <tr><td>B</td><td>Normal (1,4–1,8×)</td><td>&lt;5%</td><td>Estándar industrial — la más usada</td></tr>
+          <tr><td>C</td><td>Alto (2–2,5×)</td><td>&lt;5%</td><td>Compresores, trituradoras, arranque con carga</td></tr>
+          <tr><td>D</td><td>Muy alto (2,5–3×)</td><td>5–13%</td><td>Prensas, grúas, cargas de alto impacto</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="as">
+    <div class="ah" onclick="toggle('ie')"><div class="at"><span class="ab-badge" style="background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.3)">IE</span>Clases de eficiencia energética (IEC 60034-30)</div><span class="ach" id="ch-ie">▾</span></div>
+    <div class="ab" id="b-ie">
+      <div class="iec">
+        <div class="ie" style="background:rgba(249,115,22,.1);border-color:rgba(249,115,22,.3)"><div class="il" style="color:#fdba74">IE1</div><div class="iv" style="color:#fdba74">Estándar</div><div class="is" style="color:#fdba74">Eficiencia base</div></div>
+        <div class="ie" style="background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3)"><div class="il" style="color:#fcd34d">IE2</div><div class="iv" style="color:#fcd34d">Alta</div><div class="is" style="color:#fcd34d">Mín. en muchos países</div></div>
+        <div class="ie" style="background:rgba(20,184,166,.1);border-color:rgba(20,184,166,.3)"><div class="il" style="color:#5eead4">IE3</div><div class="iv" style="color:#5eead4">Premium</div><div class="is" style="color:#5eead4">Estándar UE / Chile</div></div>
+        <div class="ie" style="background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.3)"><div class="il" style="color:#93c5fd">IE4</div><div class="iv" style="color:#93c5fd">Super prem.</div><div class="is" style="color:#93c5fd">PMSM / SynRM</div></div>
+        <div class="ie" style="background:rgba(139,92,246,.1);border-color:rgba(139,92,246,.3)"><div class="il" style="color:#c4b5fd">IE5</div><div class="iv" style="color:#c4b5fd">Ultra prem.</div><div class="is" style="color:#c4b5fd">Tecnología avanzada</div></div>
+      </div>
+      <div class="cr"><label>Potencia</label><select id="ie-p" onchange="drawIE()"><option value="0.75">0,75 kW</option><option value="1.5">1,5 kW</option><option value="4">4 kW</option><option value="11" selected>11 kW</option><option value="22">22 kW</option><option value="75">75 kW</option><option value="200">200 kW</option></select></div>
+      <div class="cw"><canvas id="ieC" height="180"></canvas></div>
+      <div class="dv"></div>
+      <table class="tbl">
+        <thead><tr><th>Potencia</th><th style="color:#fdba74">IE1</th><th style="color:#fcd34d">IE2</th><th style="color:#5eead4">IE3</th><th style="color:#93c5fd">IE4</th><th style="color:#c4b5fd">IE5</th></tr></thead>
+        <tbody>
+          <tr><td>0,75 kW</td><td>72,1</td><td>77,4</td><td>80,7</td><td>82,7</td><td>—</td></tr>
+          <tr><td>4 kW</td><td>84,0</td><td>86,9</td><td>89,8</td><td>91,0</td><td>92,0</td></tr>
+          <tr><td>11 kW</td><td>87,6</td><td>89,8</td><td>91,8</td><td>93,0</td><td>94,0</td></tr>
+          <tr><td>22 kW</td><td>89,8</td><td>91,6</td><td>93,0</td><td>94,0</td><td>95,0</td></tr>
+          <tr><td>75 kW</td><td>92,1</td><td>93,6</td><td>95,0</td><td>95,8</td><td>96,5</td></tr>
+          <tr><td>200 kW</td><td>93,6</td><td>95,0</td><td>96,2</td><td>96,8</td><td>97,3</td></tr>
+        </tbody>
+      </table>
+      <div class="dv"></div>
+      <div class="sl">Calculadora ahorro energético anual (comparado con IE1)</div>
+      <div class="cr"><label>Potencia (kW)</label><input type="range" id="ah-p" min="1" max="200" value="11" step="1" oninput="calcAhorro()"><span class="vo" id="ah-po">11 kW</span></div>
+      <div class="cr"><label>Horas/año</label><input type="range" id="ah-h" min="1000" max="8760" value="4000" step="100" oninput="calcAhorro()"><span class="vo" id="ah-ho">4000 h</span></div>
+      <div class="cr"><label>Tarifa ($/kWh)</label><input type="range" id="ah-t" min="50" max="300" value="120" step="5" oninput="calcAhorro()"><span class="vo" id="ah-to">$120</span></div>
+      <div id="ahorro-r" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px"></div>
+    </div>
+  </div>
+</section>
+<hr class="sd">
+
+<!-- ══════════ 05 ARRANQUE ══════════ -->
+<section id="arranque" class="ps">
+  <div class="sh"><div class="se">05 — Arranque</div><h2 class="st">Métodos de Arranque de Motores AC</h2><p class="ss">DOL, Y–Δ, autotransformador, arrancador suave y variador de frecuencia con gráfico comparativo de corriente.</p></div>
+  <div class="as">
+    <div class="ah" onclick="toggle('arr')"><div class="at"><span class="ab-badge" style="background:rgba(59,130,246,.15);color:#93c5fd;border:1px solid rgba(59,130,246,.3)">Arranque</span>Métodos de arranque y comparación</div><span class="ach" id="ch-arr">▾</span></div>
+    <div class="ab" id="b-arr">
+      <div class="chips">
+        <span class="chip c-red" onclick="det('da-dol')">Directo (DOL)</span>
+        <span class="chip c-amber" onclick="det('da-yd')">Estrella–Triángulo</span>
+        <span class="chip c-blue" onclick="det('da-at')">Autotransformador</span>
+        <span class="chip c-teal" onclick="det('da-ss')">Arrancador suave</span>
+        <span class="chip c-purple" onclick="det('da-vfd')">Variador (VFD)</span>
+        <span class="chip c-green" onclick="det('da-res')">Resistencia serie</span>
+        <span class="chip c-coral" onclick="det('da-pw')">Devanado parcial</span>
+      </div>
+      <div class="db" id="da-dol"><p class="dt">Arranque directo (DOL)</p><div class="ir"><div class="d"></div><p>Conexión directa a la red mediante un contactor. Corriente: 5–8× I<sub>nom</sub>. Sin reducción. Provoca caída de tensión en la red y golpe mecánico en acoplamientos. Permitido sin restricción solo en motores pequeños (&lt;7,5 kW según SEC/distribuidora).</p></div></div>
+      <div class="db" id="da-yd"><p class="dt">Arranque estrella–triángulo (Y–Δ)</p><div class="ir"><div class="d"></div><p>Arranca en Y: V<sub>bobina</sub> = V<sub>L</sub>/√3 → corriente = 1/3 DOL, par = 1/3 DOL. Al ~80% de la velocidad conmuta a Δ. Transitorio Y→Δ genera un segundo pico. 3 contactores + temporizador. Motor debe tener 6 bornes accesibles y estar diseñado para Δ en tensión de red.</p></div></div>
+      <div class="db" id="da-at"><p class="dt">Autotransformador</p><div class="ir"><div class="d"></div><p>Reduce la tensión al motor durante el arranque (tomas típicas: 50%, 65%, 80% V<sub>nom</sub>). I<sub>línea</sub> = k²×I<sub>DOL</sub>. Mayor par que Y–Δ para igual reducción de corriente. Motores de 22–300 kW con par moderado al arranque.</p></div></div>
+      <div class="db" id="da-ss"><p class="dt">Arrancador suave (Soft-starter)</p><div class="ir"><div class="d"></div><p>Tiristores (SCR) controlan el ángulo de disparo → tensión crece gradualmente. Corriente configurable: 2–4× I<sub>nom</sub>. Rampa de aceleración y deceleración programables. Bypass automático al alcanzar la velocidad nominal. Ideal: bombas (golpe de ariete), compresores, cintas, arranques frecuentes.</p></div></div>
+      <div class="db" id="da-vfd"><p class="dt">Variador de frecuencia (VFD)</p><div class="ir"><div class="d"></div><p>Rectifica AC → DC → PWM a frecuencia y tensión variables. Corriente de arranque ≤ I<sub>nom</sub>. Sin golpe mecánico. Control total de velocidad y par. Ahorro energético 20–50% en cargas cuadráticas (P ∝ n³). Genera armónicos en la red → filtros EMI necesarios.</p></div></div>
+      <div class="db" id="da-res"><p class="dt">Resistencia serie</p><div class="ir"><div class="d"></div><p>Resistencias en serie con el estátor limitan la corriente. Se cortocircuitan escalonadamente. Ineficiente (disipa calor). En desuso frente al soft-starter. Presente en instalaciones antiguas.</p></div></div>
+      <div class="db" id="da-pw"><p class="dt">Devanado parcial (Part-winding)</p><div class="ir"><div class="d"></div><p>Estátor con dos devanados paralelos. Arranca solo con la mitad; tras 1–2 s conecta el segundo devanado. Corriente ≈ 60% DOL. Requiere motor especial de 12 bornes. Compresores herméticos de refrigeración.</p></div></div>
+      <div class="dv"></div>
+      <div class="cr"><label>I nominal (A)</label><input type="range" id="arr-i" min="5" max="200" value="30" step="1" oninput="document.getElementById('arr-io').textContent=this.value+' A';drawArr()"><span class="vo" id="arr-io">30 A</span></div>
+      <div class="cw"><canvas id="arrC" height="200"></canvas></div>
+      <div class="lg"><div class="li"><div class="ld" style="background:#ef4444"></div>DOL</div><div class="li"><div class="ld" style="background:#f59e0b"></div>Y–Δ</div><div class="li"><div class="ld" style="background:#3b82f6"></div>Soft-starter</div><div class="li"><div class="ld" style="background:#8b5cf6"></div>VFD</div></div>
+      <div class="dv"></div>
+      <table class="tbl">
+        <thead><tr><th>Método</th><th>Reducción I</th><th>Par arranque</th><th>Costo</th><th>Aplicación típica</th></tr></thead>
+        <tbody>
+          <tr><td>DOL</td><td>Ninguna</td><td>Máximo</td><td>Muy bajo</td><td>Motores &lt;7,5 kW, arranques esporádicos</td></tr>
+          <tr><td>Y–Δ</td><td>67%</td><td>Bajo (33%)</td><td>Bajo</td><td>Ventiladores, bombas sin carga al arranque</td></tr>
+          <tr><td>Autotransformador</td><td>50–75%</td><td>Medio</td><td>Medio</td><td>Motores 22–300 kW, par moderado</td></tr>
+          <tr><td>Soft-starter</td><td>50–75%</td><td>Configurable</td><td>Medio</td><td>Bombas, compresores, arranques frecuentes</td></tr>
+          <tr><td>VFD</td><td>~100%</td><td>Total control</td><td>Alto</td><td>Velocidad variable, ahorro energético</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<hr class="sd">
+
+<!-- ══════════ 06 PROTECCIONES ══════════ -->
+<section id="protecciones" class="ps">
+  <div class="sh"><div class="se">06 — Protecciones</div><h2 class="st">Protecciones Eléctricas de Motores</h2><p class="ss">Sobrecorriente, temperatura, tensión, fases, mecánicas. Códigos ANSI y esquemas por potencia.</p></div>
+  <div class="as">
+    <div class="ah" onclick="toggle('prot')"><div class="at"><span class="ab-badge" style="background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3)">Protección</span>Protecciones eléctricas de motores</div><span class="ach" id="ch-prot">▾</span></div>
+    <div class="ab" id="b-prot">
+      <div class="sl">Sobrecorriente y temperatura</div>
+      <div class="chips">
+        <span class="chip c-red" onclick="det('pp-term')">Relé térmico</span>
+        <span class="chip c-red" onclick="det('pp-gm')">Guardamotor</span>
+        <span class="chip c-red" onclick="det('pp-ptc')">Termistor PTC</span>
+        <span class="chip c-red" onclick="det('pp-49')">Relé 49</span>
+      </div>
+      <div class="db" id="pp-term"><p class="dt">Relé térmico bimetálico</p><div class="ir"><div class="d"></div><p>Láminas bimetálicas que se curvan con el calor de la corriente. Ajuste: 1,0–1,25× I<sub>nom</sub>. No protege contra cortocircuito (para eso se usa el guardamotor o fusible). Rearme manual o automático.</p></div></div>
+      <div class="db" id="pp-gm"><p class="dt">Guardamotor (motor circuit protector)</p><div class="ir"><div class="d"></div><p>Combina protección contra sobrecarga (térmica) y cortocircuito (magnética) en un solo dispositivo. Rango de ajuste de corriente integrado. Disparo instantáneo magnético: 8–15× I<sub>nom</sub>. Hasta ~45 kW.</p></div></div>
+      <div class="db" id="pp-ptc"><p class="dt">Termistor PTC embebido en devanado</p><div class="ir"><div class="d"></div><p>Sensores de temperatura insertados en las bobinas del estátor. PTC: resistencia sube bruscamente al superar 120–150°C → dispara relé. Protege contra sobretemperatura por sobrecarga prolongada, falta de ventilación o ambiente caluroso.</p></div></div>
+      <div class="db" id="pp-49"><p class="dt">Relé 49 — Sobrecarga térmica (ANSI 49)</p><div class="ir"><div class="d"></div><p>Modela térmicamente el motor mediante integral I²t. Más preciso que el bimetálico. Incorpora memoria térmica: si el motor ya estaba caliente antes de la falla, el relé lo sabe y dispara antes.</p></div></div>
+      <div class="dv"></div>
+      <div class="sl">Tensión y fases</div>
+      <div class="chips">
+        <span class="chip c-amber" onclick="det('pp-fp')">Falta de fase</span>
+        <span class="chip c-amber" onclick="det('pp-asim')">Asimetría</span>
+        <span class="chip c-amber" onclick="det('pp-inv')">Inversión secuencia</span>
+        <span class="chip c-amber" onclick="det('pp-bv')">Bajo voltaje</span>
+        <span class="chip c-amber" onclick="det('pp-sv')">Sobrevoltaje</span>
+      </div>
+      <div class="db" id="pp-fp"><p class="dt">Relé de falta de fase</p><div class="ir"><div class="d"></div><p>Sin las 3 fases el motor opera como monofásico: corriente sube al 150–200% en las fases restantes. Relé dedicado dispara en &lt;2 s. Causa más común: fusible quemado en una fase, contactor defectuoso, cable roto.</p></div></div>
+      <div class="db" id="pp-asim"><p class="dt">Relé de asimetría de fases</p><div class="ir"><div class="d"></div><p>Un 5% de desequilibrio de tensión produce ~25% de desequilibrio de corriente. Genera componente inversa → par de frenado + calentamiento en el rotor. Umbral típico: 3–10%, tiempo de respuesta 1–5 s.</p></div></div>
+      <div class="db" id="pp-inv"><p class="dt">Relé de inversión de secuencia</p><div class="ir"><div class="d"></div><p>Detecta si el orden RST se invirtió → motor gira al revés. Crítico en bombas, ascensores, compresores de tornillo. Disparo instantáneo. Integrado en relés multipropósito (Schneider RM35TF, ABB CM-MPS).</p></div></div>
+      <div class="db" id="pp-bv"><p class="dt">Relé de bajo voltaje</p><div class="ir"><div class="d"></div><p>Dispara cuando V &lt; 85–90% V<sub>nom</sub>. Motor intenta mantener par → sube corriente → sobrecalentamiento. También protege contra arranques automáticos tras retorno de energía. Obligatorio en equipos críticos (NCh 4/2003).</p></div></div>
+      <div class="db" id="pp-sv"><p class="dt">Relé de sobrevoltaje</p><div class="ir"><div class="d"></div><p>Dispara cuando V &gt; 110% V<sub>nom</sub>. Tensiones altas → mayor densidad de flujo en el hierro → pérdidas en el núcleo y calentamiento del estátor. Umbral típico: 110–115%, retardo 1–5 s.</p></div></div>
+      <div class="dv"></div>
+      <div class="sl">Protecciones mecánicas y especiales</div>
+      <div class="chips">
+        <span class="chip c-teal" onclick="det('pp-blk')">Rotor bloqueado</span>
+        <span class="chip c-teal" onclick="det('pp-frec')">Arranques frecuentes</span>
+        <span class="chip c-teal" onclick="det('pp-gnd')">Falla a tierra</span>
+        <span class="chip c-teal" onclick="det('pp-87')">Diferencial 87M</span>
+      </div>
+      <div class="db" id="pp-blk"><p class="dt">Rotor bloqueado (locked rotor)</p><div class="ir"><div class="d"></div><p>Motor lleva más tiempo del normal arrancando (I alta sin subida de velocidad). Atascamiento mecánico, cojinete dañado o cuerpo extraño. Relé dedicado dispara en 2–10 s con I &gt; 4× I<sub>nom</sub>.</p></div></div>
+      <div class="db" id="pp-frec"><p class="dt">Control de arranques frecuentes</p><div class="ir"><div class="d"></div><p>Cada arranque inyecta energía térmica. Fabricantes especifican máximo arranques/hora (típico 2–6 para DOL). Relés electrónicos avanzados bloquean el siguiente arranque hasta que el motor se haya enfriado. Soft-starter y VFD prácticamente eliminan esta restricción.</p></div></div>
+      <div class="db" id="pp-gnd"><p class="dt">Relé de falla a tierra</p><div class="ir"><div class="d"></div><p>TC toroidal alrededor de los 3 conductores mide corriente de secuencia cero. Umbral sensible 30–500 mA (protección de personas) o 1–10 A (protección del motor). Obligatorio según DS N°4 / RIC N°06 en instalaciones chilenas.</p></div></div>
+      <div class="db" id="pp-87"><p class="dt">Protección diferencial de motor (87M)</p><div class="ir"><div class="d"></div><p>Compara corriente en ambos extremos del devanado. Diferencia = falta interna entre espiras o fases. Disparo ultrarrápido &lt;30 ms. Para motores &gt;1 MW. En motores medianos se usa relé 46 (desequilibrio de corriente) como alternativa.</p></div></div>
+      <div class="dv"></div>
+      <table class="tbl">
+        <thead><tr><th>Potencia</th><th>Protecciones mínimas recomendadas</th></tr></thead>
+        <tbody>
+          <tr><td>&lt;0,75 kW</td><td>Guardamotor + relé térmico</td></tr>
+          <tr><td>0,75–7,5 kW</td><td>Guardamotor + contactor + relé térmico + protección de fases</td></tr>
+          <tr><td>7,5–75 kW</td><td>Interruptor + contactor + relé electrónico multifunción (49, falta de fase, asimetría, tierra)</td></tr>
+          <tr><td>75–750 kW</td><td>Interruptor + contactor + relé numérico (49, 51, 46, 27, 59, 64) + termistor PTC + soft-starter o VFD</td></tr>
+          <tr><td>&gt;750 kW</td><td>Relé numérico completo 87M + 49 + 46 + 27 + 59 + 64 + registrador de fallas</td></tr>
+        </tbody>
+      </table>
+      <div class="dv"></div>
+      <table class="tbl">
+        <thead><tr><th>Código ANSI</th><th>Nombre</th><th>Función</th></tr></thead>
+        <tbody>
+          <tr><td>27</td><td>Bajo voltaje</td><td>Disparo por caída de tensión</td></tr>
+          <tr><td>46</td><td>Desequilibrio de corriente</td><td>Asimetría o falta de fase</td></tr>
+          <tr><td>47</td><td>Secuencia de fases</td><td>Tensión inversa o ausente</td></tr>
+          <tr><td>49</td><td>Sobrecarga térmica</td><td>Modelo térmico I²t del motor</td></tr>
+          <tr><td>50/51</td><td>Sobrecorriente inst./tiempo</td><td>Cortocircuito y sobrecorriente temporizada</td></tr>
+          <tr><td>59</td><td>Sobrevoltaje</td><td>Tensión por sobre el umbral</td></tr>
+          <tr><td>64/50G</td><td>Falla a tierra</td><td>Corriente de fuga al chasis o tierra</td></tr>
+          <tr><td>87M</td><td>Diferencial de motor</td><td>Falta interna entre espiras o fases</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<hr class="sd">
+
+<!-- ══════════ 07 TRANSFORMADORES ══════════ -->
+<section id="transformadores" class="ps">
+  <div class="sh"><div class="se">07 — Transformadores</div><h2 class="st">Transformadores Eléctricos</h2><p class="ss">Tipos monofásicos y trifásicos, conexiones y grupos vectoriales, sistemas de refrigeración IEC 60076-2 y líquidos dieléctricos.</p></div>
+
+  <div class="as">
+    <div class="ah" onclick="toggle('t1')"><div class="at"><span class="ab-badge" style="background:rgba(139,92,246,.15);color:#c4b5fd;border:1px solid rgba(139,92,246,.3)">1~</span>Transformadores monofásicos — tipos y aplicaciones</div><span class="ach" id="ch-t1">▾</span></div>
+    <div class="ab" id="b-t1">
+      <div class="fb"><div class="ff">a = N₁/N₂ = V₁/V₂ = I₂/I₁ &nbsp;·&nbsp; S = V·I [VA]</div><div class="fl">a &gt; 1 → reductor &nbsp;·&nbsp; a &lt; 1 → elevador &nbsp;·&nbsp; a = 1 → aislamiento</div></div>
+      <div class="sl" style="margin-top:12px">Tipos por construcción del núcleo</div>
+      <div class="chips">
+        <span class="chip c-purple" onclick="det('t1-core')">Tipo núcleo (core)</span>
+        <span class="chip c-teal" onclick="det('t1-shell')">Tipo acorazado (shell)</span>
+        <span class="chip c-amber" onclick="det('t1-tor')">Toroidal</span>
+        <span class="chip c-blue" onclick="det('t1-auto')">Autotransformador</span>
+      </div>
+      <div class="db" id="t1-core"><p class="dt">Tipo núcleo (core-type)</p><div class="ir"><div class="d"></div><p>Los devanados rodean al núcleo. Forma E-I o rectangular con dos columnas. Flujo de dispersión mayor → Xcc ≈ 4–8%. Mejor disipación de calor. Transformadores de distribución de media y alta potencia.</p></div></div>
+      <div class="db" id="t1-shell"><p class="dt">Tipo acorazado (shell-type)</p><div class="ir"><div class="d"></div><p>El núcleo rodea a los devanados. Menor flujo de dispersión → menor reactancia. Mejor comportamiento ante cortocircuitos. Más compacto para la misma potencia. Transformadores de alta tensión e instrumentación.</p></div></div>
+      <div class="db" id="t1-tor"><p class="dt">Toroidal</p><div class="ir"><div class="d"></div><p>Núcleo en forma de toro. Flujo magnético completamente contenido → mínimas pérdidas, mínima irradiación de campo externo. Eficiencia 99%+, bajo ruido magnético. Audio profesional, UPS, instrumentación médica, fuentes de precisión.</p></div></div>
+      <div class="db" id="t1-auto"><p class="dt">Autotransformador monofásico</p><div class="ir"><div class="d"></div><p>Un solo devanado actúa como primario y secundario. Sin aislamiento galvánico. Menor tamaño y pérdidas cuando la relación a está cerca de 1. Arranque de motores (autotransformador de arranque), Variac (autotransformador variable), estabilizadores de tensión.</p></div><div class="fb" style="margin-top:6px"><div class="ff">Ahorro de cobre = (1 − 1/a) × 100%</div></div></div>
+      <div class="sl" style="margin-top:4px">Tipos por función</div>
+      <div class="chips">
+        <span class="chip c-coral" onclick="det('t1-dist')">Distribución</span>
+        <span class="chip c-green" onclick="det('t1-ais')">Aislamiento</span>
+        <span class="chip c-gray" onclick="det('t1-med')">TC / TP</span>
+        <span class="chip c-amber" onclick="det('t1-sold')">Soldadura</span>
+        <span class="chip c-purple" onclick="det('t1-hf')">Electrónico HF</span>
+      </div>
+      <div class="db" id="t1-dist"><p class="dt">Transformador de distribución monofásico</p><div class="ir"><div class="d"></div><p>Reduce tensión de distribución (7,6 kV o 13,2 kV) a tensión de servicio (220 V). Potencias 5–167 kVA. En Chile: norma SEC, tensiones normalizadas 13,2/0,22 kV y 23/0,22 kV para distribución rural.</p></div></div>
+      <div class="db" id="t1-ais"><p class="dt">Transformador de aislamiento (1:1)</p><div class="ir"><div class="d"></div><p>Aislamiento galvánico sin transformar tensión. Elimina la referencia a tierra del secundario. Obligatorio en quirófanos (sistema IT médico), equipos de medición, protección en entornos húmedos.</p></div></div>
+      <div class="db" id="t1-med"><p class="dt">TC y TP — Transformadores de medida</p><div class="ir"><div class="d"></div><p><strong>TC (transformador de corriente):</strong> reduce corrientes grandes (100–5000 A) a 1 A o 5 A. El secundario NUNCA debe quedar en circuito abierto con el primario energizado → alta tensión peligrosa.</p></div><div class="ir"><div class="d"></div><p><strong>TP (transformador de potencial):</strong> reduce tensiones altas (6,6 kV–230 kV) a 100 V o 110 V. El secundario NUNCA debe cortocircuitarse. Clases de precisión: 0,1 / 0,2 / 0,5 / 1 / 3 / 5 (%).</p></div></div>
+      <div class="db" id="t1-sold"><p class="dt">Transformador de soldadura</p><div class="ir"><div class="d"></div><p>Alta corriente (50–500 A) a baja tensión (20–80 V). Alta reactancia de dispersión intencionada para limitar el cortocircuito y estabilizar el arco. Ciclo de trabajo 35–60%.</p></div></div>
+      <div class="db" id="t1-hf"><p class="dt">Transformador electrónico / alta frecuencia</p><div class="ir"><div class="d"></div><p>Opera a 20 kHz–1 MHz en fuentes conmutadas (SMPS). Núcleo de ferrita (no acero). A mayor frecuencia, menor sección de núcleo necesaria. Un transformador de 1 kVA a 100 kHz cabe en el tamaño de un encendedor.</p></div></div>
+      <div class="dv"></div>
+      <div class="sl">Calculadora monofásica</div>
+      <div class="cr"><label>Tensión prim. V₁</label><input type="range" id="t1-v1" min="100" max="13200" value="220" step="10" oninput="calcT1()"><span class="vo" id="t1-v1o">220 V</span></div>
+      <div class="cr"><label>Vueltas N₁</label><input type="range" id="t1-n1" min="10" max="2000" value="440" step="10" oninput="calcT1()"><span class="vo" id="t1-n1o">440</span></div>
+      <div class="cr"><label>Vueltas N₂</label><input type="range" id="t1-n2" min="10" max="2000" value="220" step="10" oninput="calcT1()"><span class="vo" id="t1-n2o">220</span></div>
+      <div class="cr"><label>Potencia S (VA)</label><input type="range" id="t1-s" min="100" max="100000" value="5000" step="100" oninput="calcT1()"><span class="vo" id="t1-so">5000 VA</span></div>
+      <div class="cr"><label>Factor de potencia</label><input type="range" id="t1-fp" min="0.6" max="1" value="0.9" step="0.01" oninput="calcT1()"><span class="vo" id="t1-fpo">0.90</span></div>
+      <div class="rr" id="t1-res"></div>
+    </div>
+  </div>
+
+  <div class="as">
+    <div class="ah" onclick="toggle('t3')"><div class="at"><span class="ab-badge" style="background:rgba(20,184,166,.15);color:#5eead4;border:1px solid rgba(20,184,166,.3)">3~</span>Transformadores trifásicos — tipos y construcción</div><span class="ach" id="ch-t3">▾</span></div>
+    <div class="ab" id="b-t3">
+      <div class="chips">
+        <span class="chip c-teal" onclick="det('t3-ban')">Banco 3 monofásicos</span>
+        <span class="chip c-purple" onclick="det('t3-3c')">3 columnas</span>
+        <span class="chip c-amber" onclick="det('t3-5c')">5 columnas</span>
+        <span class="chip c-blue" onclick="det('t3-auto')">Autotransformador 3~</span>
+        <span class="chip c-coral" onclick="det('t3-dist')">Distribución MT/BT</span>
+        <span class="chip c-green" onclick="det('t3-seco')">Seco (cast-resin)</span>
+      </div>
+      <div class="db" id="t3-ban"><p class="dt">Banco de tres transformadores monofásicos</p><div class="ir"><div class="d"></div><p>Si falla uno puede operar en triángulo abierto al 57,7% de potencia nominal. Facilita el transporte en potencias muy altas (cada unidad es más liviana). Subestaciones de 50+ MVA.</p></div></div>
+      <div class="db" id="t3-3c"><p class="dt">Trifásico de 3 columnas (core-type)</p><div class="ir"><div class="d"></div><p>Forma más común. Menor peso y costo. Los flujos de las tres fases se suman a cero → no se necesita columna de retorno. El armónico de 3° puede causar problemas si no hay conexión Δ en uno de los devanados.</p></div></div>
+      <div class="db" id="t3-5c"><p class="dt">Trifásico de 5 columnas</p><div class="ir"><div class="d"></div><p>3 columnas con devanados + 2 de retorno de flujo. Permite menor altura para transporte. Mejor comportamiento ante fallas de una fase. Transformadores de potencia &gt;100 MVA.</p></div></div>
+      <div class="db" id="t3-auto"><p class="dt">Autotransformador trifásico</p><div class="ir"><div class="d"></div><p>Interconexión de sistemas de distinta tensión con relación cercana a 1 (ej. 220/154 kV). Ahorro de 40–60% en cobre y hierro. Sin aislamiento galvánico. Requiere devanado terciario Δ para drenaje de armónicos de 3°.</p></div></div>
+      <div class="db" id="t3-dist"><p class="dt">Transformador de distribución MT/BT</p><div class="ir"><div class="d"></div><p>Reduce 13,2 kV/23 kV a 400 V trifásico. Potencias 25–2500 kVA. En Chile: cámaras de transformación, norma NCh 2425 y NCh 819. Conexión típica Dyn11. Eficiencia 97–99%.</p></div></div>
+      <div class="db" id="t3-seco"><p class="dt">Transformador seco de resina epoxi (cast-resin)</p><div class="ir"><div class="d"></div><p>Devanados encapsulados en resina epoxi. Sin aceite → sin riesgo de incendio ni contaminación. Clase F (155°C) o H (180°C). Obligatorio en edificios &gt;5 plantas, hospitales, centros comerciales, offshore, minería subterránea. Potencias 25–20.000 kVA.</p></div></div>
+      <div class="dv"></div>
+      <div class="sl">Calculadora trifásica</div>
+      <div class="cr"><label>Tensión prim. V₁L</label><select id="t3-v1"><option value="13200">13,2 kV</option><option value="23000">23 kV</option><option value="66000">66 kV</option><option value="110000">110 kV</option><option value="220000">220 kV</option></select></div>
+      <div class="cr"><label>Potencia S (kVA)</label><input type="range" id="t3-s" min="25" max="2500" value="630" step="25" oninput="calcT3()"><span class="vo" id="t3-so">630 kVA</span></div>
+      <div class="cr"><label>Tensión sec. V₂L</label><select id="t3-v2" onchange="calcT3()"><option value="400" selected>400 V (3~)</option><option value="231">231 V (fase-N)</option><option value="6600">6,6 kV</option><option value="13200">13,2 kV</option></select></div>
+      <div class="cr"><label>Impedancia Zcc (%)</label><input type="range" id="t3-zcc" min="2" max="8" value="4" step="0.5" oninput="calcT3()"><span class="vo" id="t3-zcco">4.0 %</span></div>
+      <div class="rr" id="t3-res"></div>
+    </div>
+  </div>
+
+  <div class="as">
+    <div class="ah" onclick="toggle('cx')"><div class="at"><span class="ab-badge" style="background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.3)">Conexiones</span>Conexiones y grupos vectoriales</div><span class="ach" id="ch-cx">▾</span></div>
+    <div class="ab" id="b-cx">
+      <div class="cxg">
+        <div class="cxc" style="background:rgba(139,92,246,.08);border-color:rgba(139,92,246,.3)" onclick="det('cx-y')"><div class="cxs" style="color:#c4b5fd">Y / y</div><div class="cxn" style="color:#c4b5fd">Estrella</div><div class="cxd" style="color:#a78bfa">V<sub>fase</sub> = V<sub>L</sub>/√3 · Neutro accesible · Menor tensión por bobina</div></div>
+        <div class="cxc" style="background:rgba(20,184,166,.08);border-color:rgba(20,184,166,.3)" onclick="det('cx-d')"><div class="cxs" style="color:#5eead4">D / d</div><div class="cxn" style="color:#5eead4">Triángulo (Delta)</div><div class="cxd" style="color:#2dd4bf">V<sub>fase</sub> = V<sub>L</sub> · Sin neutro · Drena armónicos de 3° orden</div></div>
+        <div class="cxc" style="background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.3)" onclick="det('cx-z')"><div class="cxs" style="color:#fcd34d">Z / z</div><div class="cxn" style="color:#fcd34d">Zigzag</div><div class="cxd" style="color:#fbbf24">Neutro muy robusto · Cargas desequilibradas</div></div>
+      </div>
+      <div class="db" id="cx-y"><p class="dt">Conexión Estrella (Y / yn)</p><div class="ir"><div class="d"></div><p>V<sub>fase</sub> = V<sub>L</sub>/√3. Con neutro (yn): sistema 4 hilos → 220 V fase-neutro y 380/400 V trifásico. Obligatorio en el secundario de distribución en Chile. Ventaja: menor tensión por bobina → menor aislamiento → más económico en AT.</p></div></div>
+      <div class="db" id="cx-d"><p class="dt">Conexión Triángulo (D / d)</p><div class="ir"><div class="d"></div><p>V<sub>fase</sub> = V<sub>L</sub>. Sin neutro. La corriente de 3° armónico circula dentro del triángulo sin afectar la red. Triángulo abierto: dos fases al 57,7% de potencia nominal ante falla de una unidad.</p></div></div>
+      <div class="db" id="cx-z"><p class="dt">Conexión Zigzag (Z / zn)</p><div class="ir"><div class="d"></div><p>Cada bobina dividida en dos mitades en columnas diferentes. Ante carga monofásica extrema la FMM de las semibobinas se cancela → mínima variación de tensión. Grounding transformers, SAI/UPS, industria.</p></div></div>
+      <div class="dv"></div>
+      <div class="sl">Grupos vectoriales (desfase primario–secundario)</div>
+      <div class="chips">
+        <span class="chip c-teal" onclick="det('cx-dyn11')">Dyn11 — más usado</span>
+        <span class="chip c-purple" onclick="det('cx-yyn0')">Yyn0</span>
+        <span class="chip c-blue" onclick="det('cx-yzn11')">YZn11</span>
+        <span class="chip c-amber" onclick="det('cx-dy5')">Dy5</span>
+        <span class="chip c-coral" onclick="det('cx-dd0')">Dd0</span>
+      </div>
+      <div class="db" id="cx-dyn11"><p class="dt">Dyn11 — Triángulo / estrella con neutro, −30°</p><div class="ir"><div class="d"></div><p>Primario en Δ (atrapa armónicos de 3°), secundario en yn (neutro para distribución 4 hilos). Estándar en distribución MT/BT en Chile, Europa y América Latina. Norma IEC 60076.</p></div></div>
+      <div class="db" id="cx-yyn0"><p class="dt">Yyn0 — Estrella / estrella con neutro, 0°</p><div class="ir"><div class="d"></div><p>Sin desfase. Requiere columna de retorno o neutro sólido para evitar problemas con armónicos. Transformadores de potencia AT/MT con devanado terciario Δ.</p></div></div>
+      <div class="db" id="cx-yzn11"><p class="dt">YZn11 — Estrella / zigzag con neutro, −30°</p><div class="ir"><div class="d"></div><p>Zigzag en secundario proporciona neutro muy rígido ante cargas desequilibradas. Distribución con alta probabilidad de desequilibrio (alumbrado público, comercio).</p></div></div>
+      <div class="db" id="cx-dy5"><p class="dt">Dy5 — Estrella / triángulo, −150°</p><div class="ir"><div class="d"></div><p>Δ en secundario drena armónicos del generador. Transformadores elevadores de centrales generadoras y rectificadores de 12 pulsos.</p></div></div>
+      <div class="db" id="cx-dd0"><p class="dt">Dd0 — Triángulo / triángulo, 0°</p><div class="ir"><div class="d"></div><p>Sin neutro en ningún lado. Armónicos de 3° circulan en ambos triángulos. Hornos de arco, rectificadores industriales de grandes convertidores.</p></div></div>
+      <div class="dv"></div>
+      <table class="tbl">
+        <thead><tr><th>Grupo</th><th>Primario</th><th>Secundario</th><th>Desfase</th><th>Uso típico</th></tr></thead>
+        <tbody>
+          <tr><td>Dyn11</td><td>Δ</td><td>yn</td><td>−30°</td><td>Distribución MT/BT — estándar Chile</td></tr>
+          <tr><td>Yyn0</td><td>Y</td><td>yn</td><td>0°</td><td>AT/MT con terciario Δ</td></tr>
+          <tr><td>Yd1</td><td>Y</td><td>Δ</td><td>−330°</td><td>Elevadores de central generadora</td></tr>
+          <tr><td>YZn11</td><td>Y</td><td>Zn</td><td>−30°</td><td>Cargas desequilibradas, alumbrado</td></tr>
+          <tr><td>Dy5</td><td>Y</td><td>Δ</td><td>−150°</td><td>Rectificadores 12 pulsos</td></tr>
+          <tr><td>Dd0</td><td>Δ</td><td>Δ</td><td>0°</td><td>Hornos industriales, rectificadores</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="as">
+    <div class="ah" onclick="toggle('rf')"><div class="at"><span class="ab-badge" style="background:rgba(59,130,246,.15);color:#93c5fd;border:1px solid rgba(59,130,246,.3)">Refrigeración</span>Tipos de refrigeración — IEC 60076-2</div><span class="ach" id="ch-rf">▾</span></div>
+    <div class="ab" id="b-rf">
+      <div class="fb"><div class="ff">O N A N → [Aceite][Natural][Aire][Natural]</div><div class="fl">Medios internos: O = aceite mineral · L = aceite sintético · K = silicona · G = SF₆ · W = agua<br>Medios externos: A = aire · W = agua &nbsp;·&nbsp; Circulación: N = natural · F = forzada · D = dirigida</div></div>
+      <div class="rfg" style="margin-top:14px">
+        <div class="rfc" style="background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.3)" onclick="det('rf-onan')"><div class="rfi" style="color:#93c5fd">⊙</div><div class="rfc2" style="color:#93c5fd">ONAN</div><div class="rfn" style="color:#60a5fa">Aceite / Aire natural</div></div>
+        <div class="rfc" style="background:rgba(20,184,166,.08);border-color:rgba(20,184,166,.3)" onclick="det('rf-onaf')"><div class="rfi" style="color:#5eead4">≋</div><div class="rfc2" style="color:#5eead4">ONAF</div><div class="rfn" style="color:#2dd4bf">Aceite nat. / Aire forzado</div></div>
+        <div class="rfc" style="background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.3)" onclick="det('rf-ofaf')"><div class="rfi" style="color:#fcd34d">⇄</div><div class="rfc2" style="color:#fcd34d">OFAF</div><div class="rfn" style="color:#fbbf24">Aceite forzado / Aire forzado</div></div>
+        <div class="rfc" style="background:rgba(139,92,246,.08);border-color:rgba(139,92,246,.3)" onclick="det('rf-odaf')"><div class="rfi" style="color:#c4b5fd">⊕</div><div class="rfc2" style="color:#c4b5fd">ODAF</div><div class="rfn" style="color:#a78bfa">Aceite dirigido / Aire forzado</div></div>
+        <div class="rfc" style="background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.3)" onclick="det('rf-ofwf')"><div class="rfi" style="color:#86efac">∿</div><div class="rfc2" style="color:#86efac">OFWF</div><div class="rfn" style="color:#4ade80">Aceite forzado / Agua forzada</div></div>
+        <div class="rfc" style="background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3)" onclick="det('rf-anaf')"><div class="rfi" style="color:#fca5a5">○</div><div class="rfc2" style="color:#fca5a5">AN / AF</div><div class="rfn" style="color:#f87171">Seco: Aire natural / forzado</div></div>
+      </div>
+      <div class="db" id="rf-onan"><p class="dt">ONAN — Oil Natural, Air Natural</p><div class="ir"><div class="d"></div><p>El aceite caliente sube por convección natural, pasa por radiadores externos y regresa al fondo. Sin bombas ni ventiladores → máxima confiabilidad, ruido casi nulo. Estándar en transformadores de distribución hasta 2500 kVA.</p></div></div>
+      <div class="db" id="rf-onaf"><p class="dt">ONAF — Oil Natural, Air Forced</p><div class="ir"><div class="d"></div><p>Aceite por convección natural + ventiladores en los radiadores activados automáticamente. Aumenta la potencia nominal en 25–33% frente al mismo transformador en ONAN.</p></div></div>
+      <div class="db" id="rf-ofaf"><p class="dt">OFAF — Oil Forced, Air Forced</p><div class="ir"><div class="d"></div><p>Bombas impulsan el aceite + ventiladores en radiadores. Mayor eficiencia de transferencia de calor. +50–60% de potencia frente a ONAN. Transformadores &gt;30 MVA. Requiere sistemas de bombas redundantes y suministro auxiliar confiable.</p></div></div>
+      <div class="db" id="rf-odaf"><p class="dt">ODAF — Oil Directed Air Forced</p><div class="ir"><div class="d"></div><p>Aceite bombeado y dirigido específicamente a través de los devanados. Mejor control de hot-spots (puntos calientes) → mayor vida útil del aislamiento. Transformadores &gt;100 MVA en subestaciones de transmisión.</p></div></div>
+      <div class="db" id="rf-ofwf"><p class="dt">OFWF — Oil Forced, Water Forced</p><div class="ir"><div class="d"></div><p>Aceite bombeado transfiere calor a agua en un intercambiador. Muy alta eficiencia. Transformadores de 100–1000+ MVA. Centrales hidroeléctricas. El intercambiador debe ser hermético: fuga de agua degrada el aceite y el aislamiento.</p></div></div>
+      <div class="db" id="rf-anaf"><p class="dt">AN / AF — Transformador seco</p><div class="ir"><div class="d"></div><p><strong>AN:</strong> convección natural de aire. <strong>AF:</strong> ventiladores (+35–40% potencia). Clase F (155°C) o H (180°C). Sin riesgo de incendio. Obligatorio en edificios &gt;5 plantas, hospitales, centros comerciales, offshore, minería subterránea.</p></div></div>
+      <div class="dv"></div>
+      <table class="tbl">
+        <thead><tr><th>Código</th><th>Potencia típica</th><th>Ventajas</th><th>Aplicación</th></tr></thead>
+        <tbody>
+          <tr><td>ONAN</td><td>Hasta 30 MVA</td><td>Simple, silencioso, confiable</td><td>Distribución, postes, subestaciones pequeñas</td></tr>
+          <tr><td>ONAF</td><td>10–100 MVA</td><td>+25–33% sobre ONAN</td><td>Subestaciones de distribución</td></tr>
+          <tr><td>OFAF</td><td>30–300 MVA</td><td>Compacto, alta potencia</td><td>Transformadores de potencia AT/MT</td></tr>
+          <tr><td>ODAF</td><td>100–500 MVA</td><td>Mejor control de hot-spot</td><td>Transmisión, subestaciones troncales</td></tr>
+          <tr><td>OFWF</td><td>100–1000+ MVA</td><td>Máxima compacidad</td><td>Centrales generadoras</td></tr>
+          <tr><td>AN/AF</td><td>25–20.000 kVA</td><td>Sin aceite, sin incendio</td><td>Edificios, hospitales, industria alimentaria</td></tr>
+        </tbody>
+      </table>
+      <div class="dv"></div>
+      <div class="sl">Líquidos dieléctricos</div>
+      <div class="chips">
+        <span class="chip c-amber" onclick="det('rf-amin')">Aceite mineral</span>
+        <span class="chip c-teal" onclick="det('rf-asin')">Éster sintético (MIDEL, FR3)</span>
+        <span class="chip c-blue" onclick="det('rf-sil')">Silicona</span>
+        <span class="chip c-green" onclick="det('rf-sf6')">Gas SF₆</span>
+      </div>
+      <div class="db" id="rf-amin"><p class="dt">Aceite mineral nafténico</p><div class="ir"><div class="d"></div><p>El más usado históricamente. Punto de inflamación 135–170°C. Rigidez dieléctrica 30–60 kV/2,5 mm (IEC 60156). Monitoreo DGA (gases disueltos: H₂, CH₄, C₂H₂, CO) para diagnóstico de fallas incipientes.</p></div></div>
+      <div class="db" id="rf-asin"><p class="dt">Éster sintético / natural</p><div class="ir"><div class="d"></div><p>Punto de inflamación &gt;300°C (fluido de alta ignición). Biodegradable &gt;97% en 28 días. Mayor viscosidad que el mineral. Costo 3–5× mayor. Tendencia creciente en zonas medioambientalmente sensibles.</p></div></div>
+      <div class="db" id="rf-sil"><p class="dt">Aceite de silicona</p><div class="ir"><div class="d"></div><p>Punto de inflamación &gt;300°C. Muy estable a alta temperatura. No biodegradable. Transformadores especiales de alta temperatura y ambientes con riesgo de incendio donde no se pueden instalar secos.</p></div></div>
+      <div class="db" id="rf-sf6"><p class="dt">Gas SF₆ (hexafluoruro de azufre)</p><div class="ir"><div class="d"></div><p>Rigidez dieléctrica 2,5× el aire a 3 bar. Transformadores GIS totalmente encapsulados. GWP = 23.900× CO₂ → bajo regulación estricta en Europa. Tendencia a reemplazo por gases alternativos (g³, Clean Air) en nuevas instalaciones.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>Mario Miranda Araos</strong></p>
+  <p style="margin-top:4px">Ingeniero Eléctrico · Licenciado en Ciencias de la Ingeniería Eléctrica</p>
+  <p style="margin-top:4px">Instalador Autorizado SEC Clase A · Reg. 17.509.99-0</p>
+  <p style="margin-top:8px;color:var(--text3)">Docente — CFT Estatal de O'Higgins (San Fernando / San Vicente de Tagua Tagua) · IP AIEP San Fernando</p>
+  <div class="fbadge">Material educativo · Fines académicos exclusivos · IEC 60034 · IEC 60076 · DS N°4 · RIC N°06</div>
+  <p style="margin-top:14px;font-size:11px">© 2026 — Documento de uso académico y no comercial</p>
+</footer>
+
+<script>
+const IE_DATA={0.75:[72.1,77.4,80.7,82.7,null],1.5:[78.5,83.0,85.7,87.4,null],4:[84.0,86.9,89.8,91.0,92.0],11:[87.6,89.8,91.8,93.0,94.0],22:[89.8,91.6,93.0,94.0,95.0],75:[92.1,93.6,95.0,95.8,96.5],200:[93.6,95.0,96.2,96.8,97.3]};
+const IEC=['#f97316','#f59e0b','#14b8a6','#3b82f6','#8b5cf6'];
+let pCh=null,iCh=null,aCh=null;
+
+function toggle(id){
+  const b=document.getElementById('b-'+id),c=document.getElementById('ch-'+id);
+  const o=b.classList.toggle('open');c.classList.toggle('open',o);
+  if(o){
+    if(id==='var')calcMag();
+    if(id==='par')setTimeout(drawPar,60);
+    if(id==='ie')setTimeout(()=>{drawIE();calcAhorro();},60);
+    if(id==='arr')setTimeout(drawArr,60);
+    if(id==='polo')calcVel();
+    if(id==='t1')calcT1();
+    if(id==='t3')calcT3();
+  }
+}
+function det(id){
+  const b=document.getElementById(id);if(!b)return;
+  const w=b.classList.contains('show');
+  b.parentElement.querySelectorAll(':scope>.db').forEach(x=>x.classList.remove('show'));
+  if(!w)b.classList.add('show');
+}
+function det2(id){
+  const b=document.getElementById(id);if(!b)return;
+  const w=b.classList.contains('show');
+  b.parentElement.querySelectorAll(':scope>.db').forEach(x=>x.classList.remove('show'));
+  if(!w)b.classList.add('show');
+}
+
+function calcVel(){
+  const f=parseInt(document.getElementById('sel-f').value);
+  const p=parseInt(document.getElementById('sel-p').value);
+  document.getElementById('vel-out').textContent=Math.round(120*f/p);
+}
+
+function calcMag(){
+  const N=+document.getElementById('cm-n').value,I=+document.getElementById('cm-i').value;
+  const lFe=+document.getElementById('cm-lfe').value/100,lg=+document.getElementById('cm-lg').value/1000;
+  const A=+document.getElementById('cm-a').value/10000,ur=+document.getElementById('cm-ur').value;
+  document.getElementById('cm-n-o').textContent=N;
+  document.getElementById('cm-i-o').textContent=I.toFixed(1)+' A';
+  document.getElementById('cm-lfe-o').textContent=Math.round(lFe*100)+' cm';
+  document.getElementById('cm-lg-o').textContent=(lg*1000).toFixed(1)+' mm';
+  document.getElementById('cm-a-o').textContent=Math.round(A*10000)+' cm²';
+  document.getElementById('cm-ur-o').textContent=ur;
+  const mu0=4*Math.PI*1e-7,Rt=lFe/(ur*mu0*A)+lg/(mu0*A),FMM=N*I,phi=FMM/Rt,B=phi/A;
+  const pct=(lg/(mu0*A)/Rt*100);
+  document.getElementById('mag-res').innerHTML=`
+    <div class="rc"><div class="rl">FMM</div><div class="rv">${Math.round(FMM)}</div><div class="ru">A·v</div></div>
+    <div class="rc"><div class="rl">Flujo Φ</div><div class="rv">${(phi*1e6).toFixed(2)}</div><div class="ru">μWb</div></div>
+    <div class="rc"><div class="rl">Densidad B</div><div class="rv">${B.toFixed(3)}</div><div class="ru">T</div></div>
+    <div class="rc"><div class="rl">ℛ entrehierro</div><div class="rv">${pct.toFixed(1)}</div><div class="ru">% del total</div></div>`;
+}
+
+function drawPar(){
+  const p=+document.getElementById('par-p').value,s=+document.getElementById('par-s').value/100;
+  const ns=1500/(p/4),lb=[],tr=[];
+  for(let i=0;i<=80;i++){const n=ns*i/80,sv=(ns-n)/ns;lb.push(Math.round(n));tr.push(Math.max(0,+(2*sv/(sv*sv+s*s*0.4)*0.9).toFixed(3)));}
+  const tn=tr[Math.round(80*(1-s))]||1,tN=tr.map(v=>+(v/tn*100).toFixed(1));
+  const ctx=document.getElementById('parC').getContext('2d');
+  if(pCh)pCh.destroy();
+  pCh=new Chart(ctx,{type:'line',data:{labels:lb,datasets:[
+    {label:'Par (%T nom)',data:tN,borderColor:'#14b8a6',backgroundColor:'rgba(20,184,166,.08)',borderWidth:2,pointRadius:0,tension:0.4,fill:true},
+    {label:'T nominal',data:Array(81).fill(100),borderColor:'#f97316',borderWidth:1.5,borderDash:[5,4],pointRadius:0}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
+    x:{title:{display:true,text:'Velocidad (rpm)',color:'#64748b',font:{size:11}},ticks:{maxTicksLimit:8,color:'#64748b',font:{size:10}},grid:{color:'rgba(59,130,246,.1)'}},
+    y:{title:{display:true,text:'Par (% T nom)',color:'#64748b',font:{size:11}},min:0,max:280,ticks:{color:'#64748b',font:{size:10}},grid:{color:'rgba(59,130,246,.1)'}}
+  }}});
+}
+
+function drawIE(){
+  const pot=+document.getElementById('ie-p').value,vals=IE_DATA[pot]||IE_DATA[11];
+  const ctx=document.getElementById('ieC').getContext('2d');
+  if(iCh)iCh.destroy();
+  iCh=new Chart(ctx,{type:'bar',data:{labels:['IE1','IE2','IE3','IE4','IE5'],datasets:[{label:'Eficiencia (%)',data:vals,backgroundColor:IEC.map(c=>c+'22'),borderColor:IEC,borderWidth:1.5,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
+    x:{grid:{display:false},ticks:{color:'#94a3b8',font:{size:12}}},
+    y:{min:Math.max(60,Math.min(...vals.filter(v=>v))-5),max:100,title:{display:true,text:'Eficiencia (%)',color:'#64748b',font:{size:11}},ticks:{color:'#64748b',font:{size:10}},grid:{color:'rgba(59,130,246,.1)'}}
+  }}});
+}
+
+function calcAhorro(){
+  const P=+document.getElementById('ah-p').value,H=+document.getElementById('ah-h').value,T=+document.getElementById('ah-t').value;
+  document.getElementById('ah-po').textContent=P+' kW';
+  document.getElementById('ah-ho').textContent=H+' h';
+  document.getElementById('ah-to').textContent='$'+T;
+  const pot=Object.keys(IE_DATA).map(Number).reduce((a,b)=>Math.abs(b-P)<Math.abs(a-P)?b:a);
+  const ie1=IE_DATA[pot][0]/100,r=document.getElementById('ahorro-r');
+  r.innerHTML='';
+  const nm=['IE2','IE3','IE4','IE5'],bg=['rgba(245,158,11,.15)','rgba(20,184,166,.15)','rgba(59,130,246,.15)','rgba(139,92,246,.15)'];
+  const cl=['#fcd34d','#5eead4','#93c5fd','#c4b5fd'],bd=['rgba(245,158,11,.4)','rgba(20,184,166,.4)','rgba(59,130,246,.4)','rgba(139,92,246,.4)'];
+  IE_DATA[pot].slice(1).forEach((eta,i)=>{
+    if(!eta)return;
+    const e=eta/100,sk=((P*(1-ie1)/ie1)-(P*(1-e)/e))*H*T;
+    const pct=((e-ie1)/ie1*100).toFixed(1);
+    r.innerHTML+=`<div style="background:${bg[i]};border:1px solid ${bd[i]};border-radius:10px;padding:10px 12px;text-align:center;min-width:100px;flex:1"><div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:${cl[i]};margin-bottom:2px">${nm[i]}</div><div style="font-size:15px;font-weight:700;color:${cl[i]};font-family:'DM Mono',monospace">$${Math.round(sk).toLocaleString('es-CL')}</div><div style="font-size:10px;color:${cl[i]};opacity:.7">+${pct}% efic.</div></div>`;
+  });
+}
+
+function drawArr(){
+  const In=+document.getElementById('arr-i').value,lb=[],dol=[],yd=[],ss=[],vfd=[];
+  for(let i=0;i<=80;i++){
+    const x=i/80*4;lb.push(+x.toFixed(2));
+    dol.push(x<0.05?In*7:+(In*(1+6*Math.exp(-x*2.5))).toFixed(1));
+    yd.push(x<0.05?In*2.4:x<0.8?+(In*(1+1.4*Math.exp(-x*3))).toFixed(1):x<0.85?In*3.5:+(In*(1+2.5*Math.exp(-(x-0.85)*3))).toFixed(1));
+    ss.push(+(In*(1+1.5*Math.exp(-x*1.2))).toFixed(1));
+    vfd.push(+(In*(0.95+0.05*Math.sin(x*2))).toFixed(1));
+  }
+  const ctx=document.getElementById('arrC').getContext('2d');
+  if(aCh)aCh.destroy();
+  aCh=new Chart(ctx,{type:'line',data:{labels:lb,datasets:[
+    {label:'DOL',data:dol,borderColor:'#ef4444',borderWidth:2,pointRadius:0,tension:0.3},
+    {label:'Y–Δ',data:yd,borderColor:'#f59e0b',borderWidth:2,pointRadius:0,tension:0.3},
+    {label:'Soft-starter',data:ss,borderColor:'#3b82f6',borderWidth:2,pointRadius:0,tension:0.4},
+    {label:'VFD',data:vfd,borderColor:'#8b5cf6',borderWidth:2,pointRadius:0,tension:0.4},
+    {label:'I nominal',data:Array(81).fill(In),borderColor:'rgba(148,163,184,.35)',borderWidth:1,borderDash:[4,4],pointRadius:0}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
+    x:{title:{display:true,text:'Tiempo (s)',color:'#64748b',font:{size:11}},ticks:{maxTicksLimit:9,color:'#64748b',font:{size:10}},grid:{color:'rgba(59,130,246,.1)'}},
+    y:{title:{display:true,text:'Corriente (A)',color:'#64748b',font:{size:11}},min:0,ticks:{color:'#64748b',font:{size:10}},grid:{color:'rgba(59,130,246,.1)'}}
+  }}});
+}
+
+function calcT1(){
+  const v1=+document.getElementById('t1-v1').value,n1=+document.getElementById('t1-n1').value;
+  const n2=+document.getElementById('t1-n2').value,s=+document.getElementById('t1-s').value;
+  const fp=+document.getElementById('t1-fp').value;
+  document.getElementById('t1-v1o').textContent=v1>=1000?(v1/1000).toFixed(1)+' kV':Math.round(v1)+' V';
+  document.getElementById('t1-n1o').textContent=n1;
+  document.getElementById('t1-n2o').textContent=n2;
+  document.getElementById('t1-so').textContent=s>=1000?(s/1000).toFixed(1)+' kVA':Math.round(s)+' VA';
+  document.getElementById('t1-fpo').textContent=fp.toFixed(2);
+  const a=n1/n2,v2=v1/a,i1=s/v1,i2=s/v2,p=s*fp;
+  document.getElementById('t1-res').innerHTML=`
+    <div class="rc"><div class="rl">Relación a</div><div class="rv">${a.toFixed(3)}</div><div class="ru">${a>1?'Reductor':a<1?'Elevador':'Aisla.'}</div></div>
+    <div class="rc"><div class="rl">V₂ sec.</div><div class="rv">${v2>=1000?(v2/1000).toFixed(2):v2.toFixed(1)}</div><div class="ru">${v2>=1000?'kV':'V'}</div></div>
+    <div class="rc"><div class="rl">I₁ prim.</div><div class="rv">${i1.toFixed(2)}</div><div class="ru">A</div></div>
+    <div class="rc"><div class="rl">I₂ sec.</div><div class="rv">${i2.toFixed(2)}</div><div class="ru">A</div></div>
+    <div class="rc"><div class="rl">Pot. activa</div><div class="rv">${p>=1000?(p/1000).toFixed(2):Math.round(p)}</div><div class="ru">${p>=1000?'kW':'W'}</div></div>`;
+}
+
+function calcT3(){
+  const v1=+document.getElementById('t3-v1').value||13200,s=+document.getElementById('t3-s').value*1000;
+  const v2=+document.getElementById('t3-v2').value,zcc=+document.getElementById('t3-zcc').value/100;
+  document.getElementById('t3-so').textContent=(s/1000).toFixed(0)+' kVA';
+  document.getElementById('t3-zcco').textContent=(zcc*100).toFixed(1)+' %';
+  const i1=s/(Math.sqrt(3)*v1),i2=s/(Math.sqrt(3)*v2),icc=i2/zcc;
+  document.getElementById('t3-res').innerHTML=`
+    <div class="rc"><div class="rl">Relación V</div><div class="rv">${(v1/v2).toFixed(2)}</div><div class="ru">V₁/V₂</div></div>
+    <div class="rc"><div class="rl">I₁ nominal</div><div class="rv">${i1.toFixed(2)}</div><div class="ru">A</div></div>
+    <div class="rc"><div class="rl">I₂ nominal</div><div class="rv">${i2.toFixed(1)}</div><div class="ru">A</div></div>
+    <div class="rc"><div class="rl">Icc sec.</div><div class="rv">${(icc/1000).toFixed(2)}</div><div class="ru">kA</div></div>
+    <div class="rc"><div class="rl">Pot. Scc</div><div class="rv">${(s/zcc/1e6).toFixed(2)}</div><div class="ru">MVA</div></div>`;
+}
+
+window.addEventListener('load',()=>{calcVel();calcMag();calcT1();calcT3();calcAhorro();});
+</script>
+</body>
+</html>
